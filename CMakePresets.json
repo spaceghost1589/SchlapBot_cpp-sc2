@@ -7,12 +7,18 @@
   },
   "configurePresets": [
     {
-      "name": "_x64-RelWithDebInfo",
-      "displayName": "_x64_RelWithDebInfo",
-      "description": "`_` cheese's CMake's alphabetical default selection. It's a 'Gouda hack!'",
+      "name": "base-Ninja",
+      "description": "Base Ninja inheritance which all other build are based on",
+      "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
-      "installDir": "${sourceDir}/out/install/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}"
+    },
+    {
+      "name": "base-windows-msvc",
+      "description": "Base Window's MSVC inheritance which all other Windows builds are based on",
+      "hidden": true,
+      "inherits": "base-Ninja",
       "architecture": {
         "value": "x64",
         "strategy": "external"
@@ -21,42 +27,70 @@
         "value": "host=x64",
         "strategy": "external"
       },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "x64-RelWithDebInfo",
+      "inherits": "base-windows-msvc",
+      "displayName": "RelWithDebInfo",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo"
       }
     },
     {
       "name": "x64-Release",
-      "displayName": "x64_Release",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/out/build/${presetName}",
-      "installDir": "${sourceDir}/out/install/${presetName}",
-      "architecture": {
-        "value": "x64",
-        "strategy": "external"
-      },
-      "toolset": {
-        "value": "host=x64",
-        "strategy": "external"
-      },
+      "inherits": "base-windows-msvc",
+      "displayName": "Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+        }
+    },
+    {
+      "name": "x64-Debug",
+      "inherits": "base-windows-msvc",
+      "displayName": "Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "base-Unix",
+      "description": "Base Unix (Linux + macOS) inheritance which all other Unix builds are based on",
+      "hidden": true,
+      "inherits": "base-Ninja",
+      "condition": {
+        "type": "not",
+        "condition": {
+          "type": "equals",
+          "lhs": "${hostSystemName}",
+          "rhs": "Windows"
+        }
+      }
+    },
+    {
+      "name": "Unix-RelWithDebInfo",
+      "inherits": "base-Unix",
+      "displayName": "RelWithDebInfo",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "Unix-Release",
+      "inherits": "base-Unix",
+      "displayName": "Release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
-      "name": "x64-Debug",
-      "displayName": "x64_Debug",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/out/build/${presetName}",
-      "installDir": "${sourceDir}/out/install/${presetName}",
-      "architecture": {
-        "value": "x64",
-        "strategy": "external"
-      },
-      "toolset": {
-        "value": "host=x64",
-        "strategy": "external"
-      },
+      "name": "Unix-Debug",
+      "inherits": "base-Unix",
+      "displayName": "Debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }

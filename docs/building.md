@@ -48,19 +48,24 @@ cd C:\YOUR_FOLDER_PATH
 git clone --recursive https://github.com/cpp-sc2/cpp-sc2
 ```
 
+Enter the working directory:
+
+```bat
+cd cpp-sc2
+```
+
 #### Option B: If you made your own fork, use your fork's URL instead:
 
 ```bat
 git clone --recursive https://github.com/YOUR_USERNAME/YOUR_REPO_NAME
 ```
-
-### Step 2: Generate Project Files
-
-#### Enter the working directory:
+Enter the working directory:
 
 ```bat
-cd cpp-sc2
+cd YOUR_REPO_NAME
 ```
+
+### Step 2: Generate Project Files
 
 #### Run CMake to create the build files for your version of Visual Studio:
 
@@ -73,10 +78,12 @@ cmake -B build -G "Visual Studio 17 2022"
 <br>
 Replace the generator string in the command above with your version:
 
-<br><code>`"Visual Studio 15 2017"`</code>
-<br><code>`"Visual Studio 16 2019"`</code>
-<br><code>`"Visual Studio 18 2026"`</code>
-
+```bat
+"Visual Studio 16 2019"`
+```
+```bat
+"Visual Studio 18 2026"
+```
 </details>
 
 ### Step 3: cmake
