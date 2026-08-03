@@ -1,7 +1,8 @@
 ﻿{
   "configurations": [
     {
-      "name": "x64-RelWithDebInfo",
+      "name": "_x64-RelWithDebInfo",
+      "description": "`_` cheese's CMake's alphabetical default selection. It's a 'Gouda hack!'",
       "generator": "Ninja",
       "configurationType": "RelWithDebInfo",
       "buildRoot": "${projectDir}\\out\\build\\${name}",
