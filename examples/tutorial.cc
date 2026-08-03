@@ -10,9 +10,9 @@ public:
         std::cout << "Hello, World!" << std::endl;
     }
 
-    virtual void OnStep() final {
-        std::cout << Observation()->GetGameLoop() << std::endl;
-    }
+    // virtual void OnStep() final {
+    //     std::cout << Observation()->GetGameLoop() << std::endl;
+    // }
 };
 
 

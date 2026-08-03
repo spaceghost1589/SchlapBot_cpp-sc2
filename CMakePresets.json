@@ -7,8 +7,9 @@
   },
   "configurePresets": [
     {
-      "name": "x64-RelWithDebInfo",
-      "displayName": "x64 RelWithDebInfo",
+      "name": "_x64-RelWithDebInfo",
+      "displayName": "x64_RelWithDebInfo",
+      "description": "`_` cheese's CMake's alphabetical default selection. It's a 'Gouda hack!'",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "installDir": "${sourceDir}/out/install/${presetName}",
@@ -26,7 +27,7 @@
     },
     {
       "name": "x64-Release",
-      "displayName": "x64 Release",
+      "displayName": "x64_Release",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "installDir": "${sourceDir}/out/install/${presetName}",
@@ -44,7 +45,7 @@
     },
     {
       "name": "x64-Debug",
-      "displayName": "x64 Debug",
+      "displayName": "x64_Debug",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "installDir": "${sourceDir}/out/install/${presetName}",
