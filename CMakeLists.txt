@@ -18,13 +18,6 @@ endif ()
 
 project(cpp-sc2)
 
-# Verify target architecture bitness based on pointer size
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    message(STATUS "Building for 64-bit")
-else()
-    message(STATUS "Building for 32-bit")
-endif()
-
 include(FetchContent)
 set(FETCHCONTENT_QUIET FALSE)
 
@@ -43,7 +36,7 @@ set(LIBRARY_OUTPUT_PATH "${CPP_SC2_BUILD_DIR}")
 
 # Windows builds subdirectories Debug/Release.
 # These variables will overwrite that and put binaries in bin.
-set(build_types DEBUG RELEASE MINSIZEREL RELWITHDEBINFO)
+set(build_types DEBUG RELEASE RELWITHDEBINFO)
 set(output_types LIBRARY ARCHIVE RUNTIME)
 
 foreach (build IN LISTS build_types)
@@ -83,10 +76,6 @@ endif ()
 
 if (BUILD_API_TESTS)
     add_subdirectory(tests)
-endif ()
-
-if (WSL2_CROSS_COMPILE)
-    include(protos)
 endif ()
 
 # External subproject dependencies

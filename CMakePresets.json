@@ -94,6 +94,20 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
       }
+    },
+    {
+      "name": "linux-mingw64-Release",
+      "inherits": "base-Ninja",
+      "displayName": "MinGW 64-bit (Cross-Compile)",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      },
+      "toolchainFile": "${sourceDir}/cmake/toolchain/x86-64-w64-mingw32.cmake",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
     }
   ]
 }

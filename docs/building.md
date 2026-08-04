@@ -22,114 +22,83 @@
 
 ## Windows
 
-For building for Windows under WSL2, see [WSL2 Support](#wsl2-support).
+>For building for Windows under WSL2, see [WSL2 Support](#wsl2-support).
 
-### Prerequisites
+<details open name="windows" id="prerequisites"><summary><strong style="font-size: 19px;">Prerequisites</strong></summary>
 
-1. Install **[CMake](https://cmake.org/download/)**.
+> 1. Download and install a C++ IDE like **[CLion](https://www.jetbrains.com/clion/download/?section=windows)** or **[Visual Studio](https://visualstudio.microsoft.com/downloads/)**.
+>> **Visual Studio** installation selections:
+>> - Desktop development with C++
+>> - Default optional settings.
+ 
+> 2. Download and install **[CMake](https://cmake.org/download/)**
 
-2. Download and install **[Visual Studio 2022](https://www.techspot.com/downloads/7493-visual-studio-2022.html)**.
+</details>
 
-    - 2022 is recommended for stability; 2017 is the minimum. 
+<details name="windows" id="step-1"><summary><strong style="font-size: 19px;">Step 1: Clone Repository</strong></summary>
 
-    - Select **Desktop development with C++** workload and default optional settings.
+> 1. Open **Windows PowerShell**
 
-### Step 1: Clone
-
-- Open **Visual Studio**, select `continue without code`, and open the PowerShell **terminal** (`` CTRL+` ``)
-- Navigate to where you want to save your bot:
-```bat
-cd C:\YOUR_FOLDER_PATH
-```
+> 2. Navigate to where you want to save your bot:
+>
+> <code>
+> cd C:\YOUR_FOLDER_PATH
+> </code>
 
 #### Option A: Clone the official repo directly:
 
-```bat
-git clone --recursive https://github.com/cpp-sc2/cpp-sc2
 ```
-
-Enter the working directory:
-
-```bat
-cd cpp-sc2
+git clone https://github.com/cpp-sc2/cpp-sc2
 ```
 
 #### Option B: If you made your own fork, use your fork's URL instead:
 
-```bat
-git clone --recursive https://github.com/YOUR_USERNAME/YOUR_REPO_NAME
 ```
-Enter the working directory:
-
-```bat
-cd YOUR_REPO_NAME
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME
 ```
 
-### Step 2: Generate Project Files
-
-#### Run CMake to create the build files for your version of Visual Studio:
-
-```bat
-cmake -B build -G "Visual Studio 17 2022"
-```
-
-<details>
-<summary>For other Visual Studio versions:</summary>
-<br>
-Replace the generator string in the command above with your version:
-
-```bat
-"Visual Studio 16 2019"`
-```
-```bat
-"Visual Studio 18 2026"
-```
 </details>
 
-### Step 3: cmake
+<details name="windows" id="step-2"><summary><strong style="font-size: 19px;">Step 2: CMake Generation</strong></summary>
 
-```bat
-cmake --build build --config RelWithDebInfo
-```
+> 1. Open your IDE.
 
-<details>
-<summary>RelWithDebInfo?</summary>
-<br><code>RelWithDebInfo</code> is a blend of the Release and Debug configurations:
-<br><br>- <b>Debug</b> is not useful for bot development due to massive performance costs.
-<br><br>- <b>Release</b> is what your bot will be built as when you submit to the ladder.
-<br><br>- <b>RelWithDebInfo</b> is nearly as fast as Release, and if your client crashes, you get readable debugging output rather than Release's cryptic memory addresses.
+> 2. Select **Open Folder**.
+
+> 3. Select the newly cloned folder:
+>
+> ```
+> C:\YOUR_FOLDER_PATH\REPO_NAME
+> ```
+
+>> 4. **CLion**: Use the `Enable profile` checkbox to enable all `x64` build presets.
+
+> The initial project build process will begin automatically.
+>
+> When **"CMake generation finished"** appears, proceed to the next step.
+> 
 </details>
 
-### Step 4: Build Solution
+<details name="windows" id="step-3"><summary><strong style="font-size: 19px;">Step 3: Build Project</strong></summary>
 
-#### Open the solution file in Visual Studio:
-
-```bat
-start build\cpp-sc2.sln
-```
-
-###### If you're using Visual Studio 2026: `.slnx`
-
-#### Change Visual Studio CMake Configuration to `RelWithDebInfo`
+> 1. On the top toolbar is a drop-down menu:
+> 
+>   change the setting from `Debug` to `RelWithDebInfo`.
 
 <details>
-<summary>Visual Studio 2022</summary>
-<br>- On the toolbar at the top, find the <b>Configuration</b> dropdown that reads <code>x64-Debug</code>.
-<br>- Click the down-arrow and select <code>Manage Configurations</code>.
-<br>- Click the <span style="color: green;font-size: 1.4em;"><b>+</b></span> button to add a new configuration (you will create two).
-<br>- Select <code>x64-Release</code>, rename it to <code>x64-RelWithDebInfo</code>, and confirm that the configuration type is <code>RelWithDebInfo</code>.
-<br>- Click the <span style="color: green;font-size: 1.4em;"><b>+</b></span> button again, select <code>x64-Release</code>, and change this configuration type to <code>Release</code>.
-<br>- Save the changes with <code>CTRL+S</code>.
-<br>- Close the <code>CMakeSettings.json</code> tab.
-<br>- Select the <code>x64-RelWithDebInfo</code> configuration from the dropdown.
-<br>- Open the <b>Build</b> menu on the top toolbar and select <b>Rebuild All</b> (<code>CTRL+ALT+F7</code>).
+<summary> What is<code>RelWithDebInfo</code>?</summary>
+<br><code>RelWithDebInfo</code> is a blend of the <code>Release</code> and <code>Debug</code> CMake build types:
+<br><br>- <code>Debug</code> is designed for development and testing, but can cause issues for SC2 bot dev due to performance costs.
+<br><br>- <code>Release</code> is what your bot will be built as when you submit to the ladder.
+<br><br>- <code>RelWithDebInfo</code> is nearly as fast as Release, and if your client crashes, you get readable debugging output rather than Release's cryptic memory addresses. If the information it provides is not adequate, consider swapping to `Debug`.
 </details>
 
-<details>
-<summary>Visual Studio 2026</summary>
-<br>- On the toolbar at the top, find the <b>Solution Configurations</b> dropdown that reads <code>Debug</code>.
-<br>- Click the down-arrow and select <code>RelWithDebInfo</code>.
-<br>- Open the <b>Build</b> menu on the top toolbar and select <b>Rebuild Solution</b> (<code>CTRL+ALT+F7</code>).
+> Open the <b>Build</b> menu on the top toolbar and choose the option for your IDE:
+> 
+> - CLion: <b>Rebuild Project</b>.
+> 
+> - Visual Studio: <b>Rebuild Solution</b> (<code>Ctrl+Alt+F7</code>).
+
 </details>
 
 ## macOS
@@ -231,7 +200,7 @@ $ cmake --build build --parallel $(nproc --ignore=1)
 
 ## WSL2 Support
 
-Thanks to interoperability between the [Windows and Linux file systems](https://docs.microsoft.com/en-us/windows/wsl/filesystems) in WSL2, it is possible to cross compile `cpp-sc2` under WSL2 for Windows and launch the executables from the WSL2 context using the Windows Starcraft II installation. Current implementation may not support custom installs of Starcraft II (e.g. to an external hard drive).
+Thanks to interoperability between the [Windows and Linux file systems](https://docs.microsoft.com/en-us/windows/wsl/filesystems) in WSL2, it is possible to cross compile `cpp-sc2` under WSL2 for Windows and launch the executables from the WSL2 context using the Windows Starcraft II installation. Current implementation may not support custom installations of Starcraft II (e.g. to an external hard drive).
 
 This documentation assumes the user is familiar with WSL2 setup. For a more detailed walkthrough of using WSL2 for the first time, see the [Microsoft documentation on installing Linux on Windows with WSL](https://docs.microsoft.com/en-us/windows/wsl/install)
 
