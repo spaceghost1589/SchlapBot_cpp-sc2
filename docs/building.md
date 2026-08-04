@@ -22,28 +22,27 @@
 
 ## Windows
 
->For building for Windows under WSL2, see [WSL2 Support](#wsl2-support).
+For building for Windows under WSL2, see [WSL2 Support](#wsl2-support).
 
-<details open name="windows" id="prerequisites"><summary><strong style="font-size: 19px;">Prerequisites</strong></summary>
+### Prerequisites
 
-> 1. Download and install a C++ IDE like **[CLion](https://www.jetbrains.com/clion/download/?section=windows)** or **[Visual Studio](https://visualstudio.microsoft.com/downloads/)**.
->> **Visual Studio** installation selections:
->> - Desktop development with C++
->> - Default optional settings.
+#### Download and install a C++ IDE with built-in CMake support: **[CLion](https://www.jetbrains.com/clion/download/?section=windows)** or **[Visual Studio](https://visualstudio.microsoft.com/downloads/)**.
+
+> **CLion**: Fully equipped with CMake out of the box - no separate installation required.
+
+> **Visual Studio**: Select the **"Desktop development with C++"** workload, along with the **"C++ CMake tools for Windows"** optional component during installation.
  
-> 2. Download and install **[CMake](https://cmake.org/download/)**
+If you are using an IDE without CMake pre-installed, download and install **[CMake](https://cmake.org/download/)**.
 
-</details>
+### Step 1: Clone Repository
 
-<details name="windows" id="step-1"><summary><strong style="font-size: 19px;">Step 1: Clone Repository</strong></summary>
+1. Open **Windows PowerShell**.
 
-> 1. Open **Windows PowerShell**
+2. Navigate to the path where you want to save your bot:
 
-> 2. Navigate to where you want to save your bot:
->
-> <code>
-> cd C:\YOUR_FOLDER_PATH
-> </code>
+```
+cd C:\YOUR_FOLDER_PATH
+```
 
 #### Option A: Clone the official repo directly:
 
@@ -57,33 +56,29 @@ git clone https://github.com/cpp-sc2/cpp-sc2
 git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME
 ```
 
-</details>
+### Step 2: CMake Generation
 
-<details name="windows" id="step-2"><summary><strong style="font-size: 19px;">Step 2: CMake Generation</strong></summary>
+1. Open your IDE.
 
-> 1. Open your IDE.
+2. Select **Open Folder**.
 
-> 2. Select **Open Folder**.
+3. Select the newly cloned folder:
 
-> 3. Select the newly cloned folder:
->
-> ```
-> C:\YOUR_FOLDER_PATH\REPO_NAME
-> ```
+```
+C:\YOUR_FOLDER_PATH\REPO_NAME
+```
 
->> 4. **CLion**: Use the `Enable profile` checkbox to enable all `x64` build presets.
+> **CLion**: Use the **Enable profile** checkbox to enable all `x64` build presets.
 
-> The initial project build process will begin automatically.
->
-> When **"CMake generation finished"** appears, proceed to the next step.
-> 
-</details>
+The initial project build process will begin automatically.
 
-<details name="windows" id="step-3"><summary><strong style="font-size: 19px;">Step 3: Build Project</strong></summary>
+When **"CMake generation finished"** appears, proceed to the next step.
+ 
+### Step 3: Build Project
 
-> 1. On the top toolbar is a drop-down menu:
-> 
->   change the setting from `Debug` to `RelWithDebInfo`.
+1. On the top toolbar is a drop-down menu:
+ 
+    change the setting from `Debug` to `RelWithDebInfo`.
 
 <details>
 <summary> What is<code>RelWithDebInfo</code>?</summary>
@@ -93,13 +88,13 @@ git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME
 <br><br>- <code>RelWithDebInfo</code> is nearly as fast as Release, and if your client crashes, you get readable debugging output rather than Release's cryptic memory addresses. If the information it provides is not adequate, consider swapping to `Debug`.
 </details>
 
-> Open the <b>Build</b> menu on the top toolbar and choose the option for your IDE:
-> 
-> - CLion: <b>Rebuild Project</b>.
-> 
-> - Visual Studio: <b>Rebuild Solution</b> (<code>Ctrl+Alt+F7</code>).
+Open the <b>Build</b> menu on the top toolbar and choose the option for your IDE:
 
-</details>
+> CLion: **Rebuild Project**
+
+> Visual Studio: **Rebuild Solution** (<code>Ctrl+Alt+F7</code>).
+
+A final build process will commence, taking a few minute. When complete, proceed to the [next page](getting_started.md).
 
 ## macOS
 
