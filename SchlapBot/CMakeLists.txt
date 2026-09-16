@@ -6,23 +6,26 @@ project(SchlapBot CXX)
 add_executable(SchlapBot
         main.cpp
         SchlapBot.cpp
+        SchlapBot.h
 )
 
 file(GLOB_RECURSE FILES CONFIGURE_DEPENDS
-        "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
-        "${CMAKE_CURRENT_SOURCE_DIR}/*.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/*.h"
 )
 
 target_sources(SchlapBot PRIVATE ${FILES})
 # Include directories for your bot and any local headers
 target_include_directories(SchlapBot PRIVATE
-        src
+        "${CMAKE_CURRENT_SOURCE_DIR}"       # For headers in the SchlapBot root
+        "${CMAKE_CURRENT_SOURCE_DIR}/src"   # For headers in SchlapBot/src/
+        "${CMAKE_SOURCE_DIR}/src"           # For cpp-sc2 headers
 )
 
 # Link directly to the existing cpp-sc2 library target
 target_link_libraries(SchlapBot PRIVATE cpp_sc2)
 
-# Set target properties (optional for VS, keeps things organized)
-set_target_properties(SchlapBot PROPERTIES
-        VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src"
-)
+## Set target properties (optional for VS, keeps things organized)
+#set_target_properties(SchlapBot PROPERTIES
+#        VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src"
+#)

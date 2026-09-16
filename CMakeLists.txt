@@ -21,7 +21,7 @@ project(cpp-sc2)
 include(FetchContent)
 set(FETCHCONTENT_QUIET FALSE)
 
-option(BUILD_SC2_RENDERER "Build SC2 Renderer library" ON)
+option(BUILD_SC2_RENDERER "Build SC2 Renderer library" OFF)
 option(BUILD_API_EXAMPLES "Build Examples" ON)
 option(BUILD_API_TESTS "Build Tests" ON)
 
@@ -82,7 +82,7 @@ if (WSL2_CROSS_COMPILE)
     include(protos)
 endif ()
 
-# External subproject depedencies
+# External subproject dependencies
 include(civetweb)
 include(protobuf)
 include(sc2protocol)
@@ -92,3 +92,5 @@ endif ()
 
 # cpp-sc2 libraries
 add_subdirectory(src)
+
+add_subdirectory(SchlapBot)

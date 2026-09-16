@@ -1,0 +1,68 @@
+{
+    "version": 4,
+    "cmakeMinimumRequired": {
+        "major": 4,
+        "minor": 3,
+        "patch": 0
+    },
+    "configurePresets": [
+      {
+        "binaryDir": "${sourceDir}/build/${presetName}",
+        "cacheVariables": {
+          "CMAKE_CXX_STANDARD": "20"
+        },
+        "description": "Base Ninja inheritance which all other build are based on",
+        "generator": "Ninja",
+        "hidden": true,
+        "installDir": "${sourceDir}/install/${presetName}",
+        "name": "base-Ninja",
+        "warnings": {
+          "dev": false
+        }
+      },
+      {
+        "architecture": {
+          "value": "x64",
+          "strategy": "external"
+        },
+        "cmakeExecutable": "C:/SC2AI/_Resources/_toolchains/CMake/cmake-4.4.3-windows-x86_64/bin/cmake.exe",
+        "condition": {
+          "type": "equals",
+          "lhs": "${hostSystemName}",
+          "rhs": "Windows"
+        },
+        "description": "Base Window's MSVC inheritance which all other Windows builds are based on",
+        "hidden": true,
+        "inherits": "base-Ninja",
+        "name": "base-windows-msvc",
+        "toolset": {
+          "value": "host=x64",
+          "strategy": "external"
+        }
+      },
+      {
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "RelWithDebInfo-x64"
+        },
+        "displayName": "RelWithDebInfo",
+        "inherits": "base-windows-msvc",
+        "name": "x64-RelWithDebInfo"
+      },
+      {
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Release"
+        },
+        "displayName": "Release",
+        "inherits": "base-windows-msvc",
+        "name": "x64-Release"
+      },
+      {
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug"
+        },
+        "displayName": "Debug",
+        "inherits": "base-windows-msvc",
+        "name": "x64-Debug"
+      }
+    ]
+}
