@@ -11,7 +11,6 @@ FetchContent_Declare(
     PATCH_COMMAND git apply
         --ignore-space-change
         --ignore-whitespace
-        --3way
         "${CMAKE_CURRENT_LIST_DIR}/sc2protocol-arena-packing.patch"
 )
 FetchContent_MakeAvailable(sc2protocol)
