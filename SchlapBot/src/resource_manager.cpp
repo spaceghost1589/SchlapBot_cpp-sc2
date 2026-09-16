@@ -1,15 +1,21 @@
 #include "resource_manager.h"
 
+#include <algorithm>
+#include <queue>
+#include <vector>
+
 #include "sc2api/sc2_agent.h"
 #include "sc2api/sc2_common.h"
 #include "sc2api/sc2_interfaces.h"
 #include "sc2api/sc2_unit.h"
 #include "sc2api/sc2_unit_filters.h"
+#include "sc2api/typeids/sc2_5.0.14_typeenums.h"
 
 namespace sc2 {
 
-ResourceManager::ResourceManager(const ObservationInterface* Observation, QueryInterface* Query, DebugInterface* Debug)
-    : observation(Observation), query(Query), debug(Debug) {
+ResourceManager::ResourceManager(Agent* agent) {
+    action = agent->Actions();
+    observation = agent->Observation(), query = agent->Query(), debug = agent->Debug();
 }
 
 // explicit ResourceManager(const Agent* agent) : agent_(*agent) {
@@ -23,7 +29,7 @@ void ResourceManager::Execute() {
     for (const Unit* unit : units) {
         if (unit->unit_type == UNIT_TYPEID::TERRAN_SCV) {
             if (unit->buffs.empty()) {
-                debug->DebugSphereOut((unit->pos), unit->radius);
+                debug->DebugSphereOut(unit->pos, unit->radius);
             } else if (unit->buffs.size() == 1) {
                 if (unit->buffs.front() == BUFF_ID::CARRYMINERALFIELDMINERALS)
                     debug->DebugSphereOut(unit->pos, unit->radius, Colors::BlueMinerals);
@@ -36,8 +42,50 @@ void ResourceManager::Execute() {
             }
         }
     }
-    debug->SendDebug();
+    SetWorkerCount(units, 8);
+    AssignWorkerStart(units);
+}  // Execute()
+
+void ResourceManager::SetWorkerCount(const Units& units, const int count) {
+    std::vector<const Unit*> workers;
+    for (const auto* unit : units) {
+        if (unit->unit_type == UNIT_TYPEID::TERRAN_SCV) {
+            workers.push_back(unit);
+        }
+    }
+    while (workers.size() > count) {
+        debug->DebugKillUnit(workers.back());
+        workers.pop_back();
+    }
 }
+
+void ResourceManager::AssignWorkerStart(const Units& units) {
+    std::vector<const Unit*> workers;
+    for (const Unit* unit : units) {
+        if (unit->unit_type == UNIT_TYPEID::TERRAN_SCV) {
+            workers.push_back(unit);
+        }
+    }
+
+    struct CompareMineralAmount {
+        bool operator()(const Unit* a, const Unit* b) const {
+            return static_cast<int>(a->mineral_contents) > static_cast<int>(b->mineral_contents);
+        }
+    };
+
+    std::vector<const Unit*> minerals;
+    for (const Unit* unit : units) {
+        if (unit->mineral_contents > 0) {
+            minerals.push_back(unit);
+        }
+    }
+    std::ranges::sort(minerals, {}, &Unit::mineral_contents);
+
+    for (int i = 0; i < workers.size(); ++i) {
+        action->UnitCommand(workers.at(i), ABILITY_ID::HARVEST_GATHER, minerals.at(i % workers.size()));
+    }
+}
+
 // void ResourceManager::SpeedMineWorker(Unit& worker, speedMiningPositions )
 // {
 //     // Check if the worker is in speed mining mode (e.g., has exactly one order)

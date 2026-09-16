@@ -43,7 +43,7 @@ void SchlapBot::OnGameFullStart() {
 void SchlapBot::OnGameStart() {
     std::cout << '\n' << "OnGameStart() -begin-" << '\n' << std::endl;
 
-     resource_manager = ResourceManager(Observation(), Query(), Debug());
+    resource_manager = ResourceManager(this);
 
     game_info = Observation()->GetGameInfo();
     starting_location_ = Observation()->GetStartLocation();
@@ -52,14 +52,18 @@ void SchlapBot::OnGameStart() {
     std::cout << "GetStartLocation finished" << '\n';
 
     expansions = search::CalculateExpansionLocations(Observation(), Query(), search::ExpansionParameters{});
+
+    Debug()->SendDebug();
 }
 void SchlapBot::OnStep() {
+    Control()->GetObservation();
     uint32_t game_loop = Observation()->GetGameLoop();
 
     Units units = Observation()->GetUnits(Self);
 
 
     resource_manager.Execute();
+    Debug()->SendDebug();
 }
 
 //------------------------------------------------------------------------------
@@ -87,7 +91,7 @@ void SchlapBot::OnUpgradeCompleted(const UpgradeID id_) {
 }
 
 void SchlapBot::OnGameEnd() {
-    std::cout << "Game over! You " << GameResultToName(Observation()->GetResults().front().result) << "!" << '\n';
+    // std::cout << "Game over! You " << GameResultToName(Observation()->GetResults().front().result) << "!" << '\n';
 }
 
 void SchlapBot::OnError(const std::vector<ClientError>& client_errors,
