@@ -1,9 +1,9 @@
 #include "sc2_data.h"
 
 #include <cassert>
-#include <iostream>
+#include <string>
 
-#include "s2clientprotocol/sc2api.pb.h"
+#include "s2clientprotocol/data.pb.h"
 #include "sc2_interfaces.h"
 #include "sc2_proto_to_pods.h"
 
@@ -131,16 +131,16 @@ void AbilityData::ReadFromProto(const SC2APIProtocol::AbilityData& ability_data)
     }
 }
 
-std::string AbilityData::Log() const {
+auto AbilityData::Log() const -> std::string {
     std::string str_out;
     str_out = ability_id.to_string() + ":\n";
-    if (button_name.length() > 0) {
+    if (!button_name.empty()) {
         str_out += "  Button: " + button_name + "\n";
     }
-    if (hotkey.length() > 0) {
+    if (!hotkey.empty()) {
         str_out += "  Hotkey: " + hotkey + "\n";
     }
-    str_out += "  " + (link_name.length() > 0 ? link_name : "Null") + ", " + std::to_string(link_index) + "\n";
+    str_out += "  " + (!link_name.empty() ? link_name : "Null") + ", " + std::to_string(link_index) + "\n";
     if (is_building) {
         str_out += "  Building footprint: " + std::to_string(footprint_radius) + "\n";
     }
@@ -171,7 +171,44 @@ std::string AbilityData::Log() const {
     return str_out;
 }
 
-static Attribute ConvertAttributeEnum(SC2APIProtocol::Attribute attribute) {
+auto AbilityData::LogFull() -> std::string {
+    std::string str_out;
+    // str_out + std::boolalpha;
+
+    str_out += "       ability_id: " + std::to_string(ability_id) + '\n';
+    str_out += "        link_name: " + link_name + '\n';
+    str_out += "       link_index: " + std::to_string(link_index) + '\n';
+    str_out += "      button_name: " + button_name + '\n';
+    str_out += "    friendly_name: " + friendly_name + '\n';
+    str_out += "           hotkey: " + hotkey + '\n';
+    str_out += "     remaps_to_id: " + std::to_string(remaps_to_ability_id) + '\n';
+    str_out += "        available: " + (available ? std::string("true") : std::string("false")) + '\n';
+    str_out += "           target: " + TargetToName() + '\n';
+    str_out += "    allow_minimap: " + (allow_minimap ? std::string("true") : std::string("false")) + '\n';
+    str_out += "   allow_autocast: " + (allow_autocast ? std::string("true") : std::string("false")) + '\n';
+    str_out += "     is_structure: " + (is_building ? std::string("true") : std::string("false")) + '\n';
+    str_out += " footprint_radius: " + std::to_string(footprint_radius) + '\n';
+    str_out += "instant_placement: " + (is_instant_placement ? std::string("true") : std::string("false")) + '\n';
+    str_out += "       cast_range: " + std::to_string(cast_range) + "\n\n";
+    return str_out;
+}
+
+auto AbilityData::TargetToName() const -> std::string {
+    switch (target) {
+        case AbilityData::Target::None:
+            return "None";
+        case AbilityData::Target::Point:
+            return "Point";
+        case AbilityData::Target::Unit:
+            return "Unit";
+        case AbilityData::Target::PointOrUnit:
+            return "PointOrUnit";
+        case AbilityData::Target::PointOrNone:
+            return "PointOrNone";
+    }
+}
+
+static auto ConvertAttributeEnum(SC2APIProtocol::Attribute attribute) -> Attribute {
     switch (attribute) {
         case SC2APIProtocol::Attribute::Light:
             return Attribute::Light;

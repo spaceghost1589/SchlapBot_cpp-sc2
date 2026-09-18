@@ -84,6 +84,8 @@ struct AbilityData {
     void ReadFromProto(const SC2APIProtocol::AbilityData& ability_data);
     //! Serialize this ability to a string.
     std::string Log() const;
+    std::string LogFull();
+    std::string TargetToName() const;
 };
 
 typedef std::vector<AbilityData> Abilities;

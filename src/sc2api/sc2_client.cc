@@ -1419,7 +1419,7 @@ public:
     std::unique_ptr<DebugImp> debug_imp_;
     ProcessInfo pi_;
 
-    // Errors that may have occured during calls to the various interfaces.
+    // Errors that may have occurred during calls to the various interfaces.
     std::vector<ClientError> client_errors_;
     std::vector<std::string> protocol_errors_;
 
