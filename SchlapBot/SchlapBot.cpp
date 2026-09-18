@@ -4,57 +4,45 @@
 
 #include <algorithm>
 #include <chrono>
-#include <cstdint>
-#include <fstream>
 #include <iostream>
-#include <queue>
-#include <ranges>
 #include <string>
 #include <vector>
 
+#include "resource_manager.h"
 #include "sc2api/sc2_client.h"
 #include "sc2api/sc2_common.h"
 #include "sc2api/sc2_control_interfaces.h"
-#include "sc2api/sc2_gametypes.h"
 #include "sc2api/sc2_interfaces.h"
 #include "sc2api/sc2_map_info.h"
 #include "sc2api/sc2_unit.h"
 #include "sc2api/typeids/sc2_5.0.14_typeenums.h"
 #include "sc2lib/sc2_search.h"
-#include "sc2lib/sc2_utils.h"
-#include "resource_manager.h"
-
 namespace sc2 {
 
 using enum Unit::Alliance;
 
-ResourceManager resource_manager;
+
 
 // The main bot class.
-GameInfo game_info;
+ResourceManager resource_manager;
 
-Point3D starting_location_;
-Point2D enemy_start_location_;
-std::vector<Point3D> expansions;
+
 
 void SchlapBot::OnGameFullStart() {
+    resource_manager = ResourceManager(this);
 }
 
 void SchlapBot::OnGameStart() {
-    std::cout << '\n' << "OnGameStart() -begin-" << '\n' << std::endl;
-
-    resource_manager = ResourceManager(this);
-
     game_info = Observation()->GetGameInfo();
     starting_location_ = Observation()->GetStartLocation();
     enemy_start_location_ = Observation()->GetGameInfo().enemy_start_locations.at(0);
 
-    std::cout << "GetStartLocation finished" << '\n';
 
-    expansions = search::CalculateExpansionLocations(Observation(), Query(), search::ExpansionParameters{});
+    resource_manager.ExecuteStart();
 
     Debug()->SendDebug();
 }
+
 void SchlapBot::OnStep() {
     Control()->GetObservation();
     uint32_t game_loop = Observation()->GetGameLoop();
@@ -62,7 +50,8 @@ void SchlapBot::OnStep() {
     Units units = Observation()->GetUnits(Self);
 
 
-    resource_manager.Execute();
+    resource_manager.ExecuteStep();
+
     Debug()->SendDebug();
 }
 

@@ -1,6 +1,7 @@
 #include "resource_manager.h"
 
 #include <algorithm>
+#include <iostream>
 #include <queue>
 #include <vector>
 
@@ -8,14 +9,18 @@
 #include "sc2api/sc2_common.h"
 #include "sc2api/sc2_interfaces.h"
 #include "sc2api/sc2_unit.h"
-#include "sc2api/sc2_unit_filters.h"
 #include "sc2api/typeids/sc2_5.0.14_typeenums.h"
+#include "sc2lib/sc2_search.h"
+
+namespace {
+using namespace std;
+}  // namespace
 
 namespace sc2 {
 
 ResourceManager::ResourceManager(Agent* agent) {
-    action = agent->Actions();
-    observation = agent->Observation(), query = agent->Query(), debug = agent->Debug();
+    Action = agent->Actions();
+    Observation = agent->Observation(), Query = agent->Query(), Debug = agent->Debug();
 }
 
 // explicit ResourceManager(const Agent* agent) : agent_(*agent) {
@@ -23,71 +28,102 @@ ResourceManager::ResourceManager(Agent* agent) {
 //     query = agent->Query();
 //     debug = agent->Debug();
 
-void ResourceManager::Execute() {
-    const Units units = observation->GetUnits(Unit::Alliance::Self);
+void ResourceManager::ExecuteStart() {
+    expansion_locations = search::CalculateExpansionLocations(Observation, Query, search::ExpansionParameters{});
 
-    for (const Unit* unit : units) {
+    Units units = Observation->GetUnits(Unit::Alliance::Self);
+
+    starting_townhall = *ranges::find_if(units, [&](const Unit* unit) {
+        return unit->unit_type == UNIT_TYPEID::TERRAN_COMMANDCENTER || unit->unit_type == UNIT_TYPEID::PROTOSS_NEXUS ||
+               unit->unit_type == UNIT_TYPEID::ZERG_HATCHERY;
+    });
+
+    BuildResourceToWorker(starting_townhall, &units);
+
+    // SetWorkerCount(units, 8);
+    // AssignWorkerStart(units);
+}
+
+void ResourceManager::ExecuteStep() {
+    const Units& workers = Observation->GetUnits(
+        Unit::Alliance::Self, [&](const Unit& unit) { return unit.unit_type == UNIT_TYPEID::TERRAN_SCV; });
+    const Units& resources = Observation->GetUnits(
+        [&](const Unit& unit) -> bool { return unit.mineral_contents > 0 || unit.vespene_contents > 0; });
+
+    for (const Unit* unit : workers) {
         if (unit->unit_type == UNIT_TYPEID::TERRAN_SCV) {
             if (unit->buffs.empty()) {
-                debug->DebugSphereOut(unit->pos, unit->radius);
+                Debug->DebugSphereOut(unit->pos, unit->radius);
             } else if (unit->buffs.size() == 1) {
                 if (unit->buffs.front() == BUFF_ID::CARRYMINERALFIELDMINERALS)
-                    debug->DebugSphereOut(unit->pos, unit->radius, Colors::BlueMinerals);
+                    Debug->DebugSphereOut(unit->pos, unit->radius, Colors::BlueMinerals);
                 else if (unit->buffs.front() == BUFF_ID::CARRYHARVESTABLEVESPENEGEYSERGAS)
-                    debug->DebugSphereOut(unit->pos, unit->radius, Colors::GreenVespeneGas);
+                    Debug->DebugSphereOut(unit->pos, unit->radius, Colors::GreenVespeneGas);
                 else if (unit->buffs.front() == BUFF_ID::CARRYHIGHYIELDMINERALFIELDMINERALS)
-                    debug->DebugSphereOut(unit->pos, unit->radius, Colors::GoldMinerals);
+                    Debug->DebugSphereOut(unit->pos, unit->radius, Colors::GoldMinerals);
                 else
-                    debug->DebugSphereOut(unit->pos, unit->radius, Colors::PurpleVespeneGas);
+                    Debug->DebugSphereOut(unit->pos, unit->radius, Colors::PurpleVespeneGas);
             }
         }
     }
-    SetWorkerCount(units, 8);
-    AssignWorkerStart(units);
 }  // Execute()
 
-void ResourceManager::SetWorkerCount(const Units& units, const int count) {
-    std::vector<const Unit*> workers;
+void ResourceManager::SetWorkerCount(const Units& units, const int count) const {
+    cout << "Starting ResourceManager::SetWorkerCount" << '\n';
+    vector<const Unit*> workers;
     for (const auto* unit : units) {
         if (unit->unit_type == UNIT_TYPEID::TERRAN_SCV) {
             workers.push_back(unit);
         }
     }
     while (workers.size() > count) {
-        debug->DebugKillUnit(workers.back());
+        Debug->DebugKillUnit(workers.back());
         workers.pop_back();
     }
 }
 
 void ResourceManager::AssignWorkerStart(const Units& units) {
-    std::vector<const Unit*> workers;
+    cout << "Starting ResourceManager::AssignWorkerStart" << '\n';
+    Units workers;
     for (const Unit* unit : units) {
         if (unit->unit_type == UNIT_TYPEID::TERRAN_SCV) {
             workers.push_back(unit);
         }
     }
 
-    struct CompareMineralAmount {
-        bool operator()(const Unit* a, const Unit* b) const {
-            return static_cast<int>(a->mineral_contents) > static_cast<int>(b->mineral_contents);
-        }
-    };
+    Units minerals = Observation->GetUnits(Unit::Alliance::Neutral, [&](const Unit& unit) -> bool {
+        return unit.mineral_contents != 0 && Distance2D(unit.pos, Observation->GetStartLocation()) < 10;
+    });
 
-    std::vector<const Unit*> minerals;
-    for (const Unit* unit : units) {
-        if (unit->mineral_contents > 0) {
-            minerals.push_back(unit);
-        }
-    }
-    std::ranges::sort(minerals, {}, &Unit::mineral_contents);
+    ranges::sort(minerals, CompareMineralAmount{});
 
     for (int i = 0; i < workers.size(); ++i) {
-        action->UnitCommand(workers.at(i), ABILITY_ID::HARVEST_GATHER, minerals.at(i % workers.size()));
+        Action->UnitCommand(workers.at(i), ABILITY_ID::HARVEST_GATHER, minerals.at(i % minerals.size()));
     }
 }
 
-// void ResourceManager::SpeedMineWorker(Unit& worker, speedMiningPositions )
-// {
+ExpansionResources ResourceManager::BuildResourceToWorker(const Unit* townhall, const Units* units) {
+    Units workers;
+    for (auto unit : *units) {
+        if (unit->unit_type == UNIT_TYPEID::TERRAN_SCV || unit->unit_type == UNIT_TYPEID::TERRAN_MULE ||
+                unit->unit_type == UNIT_TYPEID::PROTOSS_PROBE || unit->unit_type == UNIT_TYPEID::ZERG_DRONE ||
+                unit->unit_type == UNIT_TYPEID::ZERG_DRONEBURROWED)
+            workers.push_back(unit);
+    }
+
+    Units minerals = Observation->GetUnits(Unit::Alliance::Neutral, [&](const Unit& unit) -> bool {
+        return unit.mineral_contents != 0 &&
+               DistanceSquared2D(townhall->pos, Observation->GetStartLocation()) < 100 /* 10^2 */;
+    });
+    ranges::sort(minerals, CompareMineralAmount{});
+
+    for (int i = 0; i < workers.size(); ++i) {
+        Action->UnitCommand(workers.at(i), ABILITY_ID::HARVEST_GATHER, minerals.at(i % minerals.size()));
+    }
+    return;
+}
+
+// void ResourceManager::SpeedMineWorker(array<const Unit*, 3> workers) {
 //     // Check if the worker is in speed mining mode (e.g., has exactly one order)
 //     if (worker.orders.size()> 1)
 //         return;
@@ -106,15 +142,17 @@ void ResourceManager::AssignWorkerStart(const Units& units) {
 //     elseif (current_order.ability_id == HARVEST_GATHER)
 //         Unit& resource = current_order.target_unit_tag();
 //
-//         // Use the computed speed mining position if it exists
-//         IF resource exists AND resource is a mineral field THEN
-//             target = speedMiningPositions[resource.position]
+//     // Use the computed speed mining position if it exists
+//     IF resource exists AND resource is a mineral field THEN
+//         target = speedMiningPositions[resource.position]
 //
-//     // Validate target distance (for example, ensuring the target is not too close or too far)
-//     IF target EXISTS AND Distance(worker.position, target) is within desired range THEN
-//         MoveWorkerTo(worker, target)
-//         // Also ensure the worker continues to gather by re-issuing the gather command (or "smart" command)
-//         GatherResource(worker, resource)
+// // Validate target distance (for example, ensuring the target is not too close or too far)
+// IF target EXISTS AND Distance(worker.position, target) is within desired range THEN
+//     MoveWorkerTo(worker, target)
+//     // Also ensure the worker continues to gather by re-issuing the gather command (or "smart" command)
+//     GatherResource(worker, resource)
+// }
+
 }  // namespace sc2
 
 // FUNCTION SpeedMineWorker(worker, speedMiningPositions):
