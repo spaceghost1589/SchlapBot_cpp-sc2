@@ -21,12 +21,12 @@ class ObservationInterface;
 
 //! An order that is active on a unit.
 struct UnitOrder {
-    //! Ability ID that triggered the order.
-    AbilityID ability_id = ABILITY_ID::INVALID;
     //! Target unit of the order, if there is one.
     Tag target_unit_tag = NullTag;
     //! Target position of the order, if there is one.
     Point2D target_pos;
+    //! Ability ID that triggered the order.
+    AbilityID ability_id = ABILITY_ID::INVALID;
     //! Progress of the order.
     float progress = 0.0F;
 };
@@ -54,8 +54,12 @@ struct PassengerUnit {
 //! A unit. Could be a structure, a worker or a military unit.
 class Unit {
 public:
-    //! If the unit is shown on screen or not.
-    enum DisplayType {
+    /*! Whether the unit is displayed on screen or not.\n
+     * @c Visible Unit will be visible.\n
+     * @c Snapshot Unit is a snapshot in the fog-of-war.\n
+     * @c Hidden Unit will be hidden to enemies.\n
+     * @c Placeholder Building that hasn't started construction.\n */
+    enum DisplayType : uint8_t {
         //! Unit will be visible.
         Visible = 1,
         //! Unit is represented by a snapshot in the fog-of-war. This is for units that don't belong to the player.
@@ -68,7 +72,7 @@ public:
     };
 
     //! Relationship to this player.
-    enum Alliance {
+    enum Alliance : uint8_t {
         //! Belongs to the player.
         Self = 1,
         //! Ally of the player.
@@ -80,7 +84,7 @@ public:
     };
 
     //! Unit cloak state.
-    enum CloakState {
+    enum CloakState : uint8_t {
         //! Under the fog, so unknown whether it's cloaked or not.
         CloakedUnknown = 0,
         //! Cloaked enemy units, invisible until detected.
@@ -93,20 +97,29 @@ public:
         CloakedAllied = 4,
     };
 
-    //! If the unit is shown on screen or not.
-    DisplayType display_type;
-    //! Relationship of the unit to this player.
-    Alliance alliance;
-
     //! A unique identifier for the instance of a unit.
     Tag tag;
+    //! Implicit conversion to the Unit's @c Tag.
+    // ReSharper disable once CppNonExplicitConversionOperator
+    operator Tag() const {
+        return tag;
+    }
+
     //! An identifier of the type of unit.
     UnitTypeID unit_type;
-    //! Which player owns a unit.
-    int owner;
 
     //! Position of the unit in the world.
     Point3D pos;
+
+    //! If the unit is shown on screen or not.
+    DisplayType display_type;
+
+    //! Relationship of the unit to this player.
+    Alliance alliance;
+    //! Which player owns a unit.
+    uint32_t owner;
+
+
     //! Direction the unit faces in radians (1 radian == 57.296 degrees)
     float facing;
     //! Radius of the unit.
@@ -117,11 +130,6 @@ public:
     //! If the unit is cloaked.
     CloakState cloak;
 
-    //! Range of detector for detector units.
-    float detect_range;
-    //! Range of radar for units that are radar units.
-    float radar_range;
-
     //! If the unit is in the current selection of the player.
     bool is_selected;
     //! Visible and within the camera frustum.
@@ -129,8 +137,15 @@ public:
     //! Detected by sensor tower.
     bool is_blip;
 
+    //! Range of detector for detector units.
+    float detect_range;
+    //! Range of radar for units that are radar units.
+    float radar_range;
+
     // Not populated for snapshots
 
+    //! Time remaining for a weapon on cooldown. Not set for snapshots.
+    float weapon_cooldown;
     //! Health of the unit. Not set for snapshots.
     float health;
     //! Max health for the unit. Not set for snapshots.
@@ -153,49 +168,50 @@ public:
     bool is_burrowed;
     //! If the unit is hallucination. Not set for snapshots.
     bool is_hallucination;
-    //! Time remaining for a weapon on cooldown. Not set for snapshots.
-    float weapon_cooldown;
 
     // Not populated for enemies/snapshots
+
+    //! Whether the unit is powered by a pylon.
+    bool is_powered;
+    //! Whether the unit is alive or not.
+    bool is_alive;
+    //! Whether the unit is building or not.
+    bool is_building;
 
     //! Orders on a unit. Only valid for this player's units.
     std::vector<UnitOrder> orders;
     //! Add-on like a tech lab or reactor. Only valid for this player's units.
     Tag add_on_tag;
+
     //! Passengers in this transport. Only valid for this player's units.
     std::vector<PassengerUnit> passengers;
     //! Number of cargo slots used in the transport. Only valid for this player's units.
     int cargo_space_taken;
     //! Number of cargo slots available for a transport. Only valid for this player's units.
     int cargo_space_max;
+
     //! Number of harvesters associated with a town hall (e.g., Command Center). Only valid for this player's units.
     int assigned_harvesters;
     //! Number of harvesters that can be assigned to a town hall (e.g., Command Center) or a geyser (e.g., Refinery).
     //! Only valid for this player's units.
     int ideal_harvesters;
+
     //! Target unit of a unit. Only valid for this player's units.
     Tag engaged_target_tag;
     //! Buffs on this unit. Only valid for this player's units.
     std::vector<BuffID> buffs;
-    //! Whether the unit is powered by a pylon.
-    bool is_powered;
 
-    //! Whether the unit is alive or not.
-    bool is_alive;
     //! The last time the unit was seen.
     uint32_t last_seen_game_loop;
 
     //! Level of weapon upgrades.
     int32_t attack_upgrade_level;
-
     //! Level of armor upgrades.
     int32_t armor_upgrade_level;
-
     //! Level of shield upgrades.
     int32_t shield_upgrade_level;
 
-    //! Whether the unit is building or not.
-    bool is_building;
+
 
     //! Whether the unit construction/training completed.
     [[nodiscard]] bool IsBuildFinished() const;

@@ -10,7 +10,7 @@
 
 namespace sc2 {
 
-typedef uint64_t Tag;
+using Tag = uint64_t;
 static const Tag NullTag = 0LL;
 
 enum Race { Terran, Zerg, Protoss, Random };

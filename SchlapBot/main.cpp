@@ -70,6 +70,7 @@ int main(const int argc,
     coordinator.StartGame("IncorporealAIE_v4.SC2Map");
 
     while (coordinator.Update()) {
+
     }
 
     return 0;
