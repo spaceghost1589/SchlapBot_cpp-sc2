@@ -19,6 +19,13 @@ set(civetweb_patches
     "${CMAKE_CURRENT_LIST_DIR}/0001-Setting-TCP_NODELAY-on-outbound-connections.patch"
     "${CMAKE_CURRENT_LIST_DIR}/0002-Moving-include-CTest-into-if-testing-guard.patch"
 )
+
+if (NOT DEPENDENCY_WARNINGS AND MSVC)
+    list(APPEND civetweb_patches
+        "${CMAKE_CURRENT_LIST_DIR}/Optional-Disable-Warnings.patch"
+    )
+endif ()
+
 set(patch_executor git apply --ignore-whitespace ${civetweb_patches})
 
 if (APPLE)
@@ -45,3 +52,7 @@ FetchContent_MakeAvailable(civetweb)
 set_target_properties(civetweb-c-library PROPERTIES FOLDER contrib)
 
 target_compile_options(civetweb-c-library PUBLIC -DUSE_IPV6=1)
+
+if(NOT DEPENDENCY_WARNINGS AND NOT MSVC)
+    target_compile_options(civetweb-c-library PRIVATE -w)
+endif()

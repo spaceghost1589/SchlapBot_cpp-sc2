@@ -1,0 +1,22 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 602fbe41..6706a8d1 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -382,7 +382,7 @@ if (CIVETWEB_ENABLE_CXX)
+   add_cxx_compiler_flag(-Wshadow)
+   add_cxx_compiler_flag(-Wmissing-prototypes)
+   add_cxx_compiler_flag(-Weverything)
+-  add_cxx_compiler_flag(/W4)
++  add_cxx_compiler_flag(/W0)
+   add_cxx_compiler_flag(-Wno-padded)
+   add_cxx_compiler_flag(/Wd4820) # padding
+   add_cxx_compiler_flag(-Wno-unused-macros)
+@@ -427,7 +427,7 @@ if (NOT ZEPHYR)
+   add_c_compiler_flag(-Wmissing-prototypes)
+   add_c_compiler_flag(-Weverything)
+   add_c_compiler_flag(-Wparentheses)
+-  add_c_compiler_flag(/W4) # VisualStudio highest warning level
++  add_c_compiler_flag(/W0) # VisualStudio highest warning level
+ 
+   #Warnings: Disable some warnings
+   add_c_compiler_flag(-Wno-padded) # padding in structures by compiler

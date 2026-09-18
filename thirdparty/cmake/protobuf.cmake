@@ -14,19 +14,17 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
     GIT_TAG v33.0
     GIT_PROGRESS TRUE
+    UPDATE_DISCONNECTED TRUE
 )
 FetchContent_MakeAvailable(protobuf)
 
-set(protobuf_targets libprotobuf libprotobuf-lite libprotoc protoc)
+set(protobuf_targets libprotobuf libprotobuf-lite libprotoc libupb protoc)
 
 foreach (target IN LISTS protobuf_targets)
     if (TARGET ${target})
         set_target_properties(${target} PROPERTIES FOLDER contrib)
     endif ()
-
-    if (MSVC)
-        target_compile_options(${target} PRIVATE /W0)
-    endif ()
+    target_compile_options(${target} PRIVATE ${DISABLE_WARNINGS_FLAG})
 endforeach ()
 
 # Resolve the protoc used to generate s2clientprotocol sources.

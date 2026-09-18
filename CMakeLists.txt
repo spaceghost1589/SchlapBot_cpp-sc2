@@ -1,12 +1,31 @@
 cmake_minimum_required(VERSION 3.15)
 
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
-    cmake_policy(SET CMP0135 NEW)
-endif ()
-
+#region Custom CMake Settings
+set(SC2_VERSION "5.0.14" CACHE STRING "Version of the target StarCraft II client")
+option(BUILD_FOR_LADDER "Create build for the AIArena ladder" OFF)
 # Skip generating proto files with Protobuf compiler and use prebuilt files.
 # Will still build Protobuf as libprotobuf is required for linking.
 option(WSL2_CROSS_COMPILE "Building on WSL2 for Windows" OFF)
+option(BUILD_SC2_RENDERER "Build SC2 Renderer library" OFF)
+option(BUILD_API_EXAMPLES "Build Examples" ON)
+option(BUILD_API_TESTS "Build Tests" OFF)
+option(DEPENDENCY_WARNINGS "Dependency Warnings" OFF)
+message(STATUS "==============================")
+message(STATUS "   CONFIGURATION SUMMARY")
+message(STATUS "------------------------------")
+message(STATUS " Target SC2 version : ${SC2_VERSION}")
+message(STATUS "   BUILD_FOR_LADDER : ${BUILD_FOR_LADDER}")
+message(STATUS " WSL2_CROSS_COMPILE : ${WSL2_CROSS_COMPILE}")
+message(STATUS " BUILD_SC2_RENDERER : ${BUILD_SC2_RENDERER}")
+message(STATUS " BUILD_API_EXAMPLES : ${BUILD_API_EXAMPLES}")
+message(STATUS "    BUILD_API_TESTS : ${BUILD_API_TESTS}")
+message(STATUS "DEPENDENCY_WARNINGS : ${DEPENDENCY_WARNINGS}")
+message(STATUS "==============================")
+#endregion
+
+if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.24)
+    cmake_policy(SET CMP0135 NEW)
+endif ()
 
 # Downstream projects including cpp-sc2 as a dependency must set toolchain the
 # toolchain file.
@@ -19,14 +38,7 @@ endif ()
 project(cpp-sc2)
 
 include(FetchContent)
-set(FETCHCONTENT_QUIET FALSE)
-
-option(BUILD_SC2_RENDERER "Build SC2 Renderer library" ON)
-option(BUILD_API_EXAMPLES "Build Examples" ON)
-option(BUILD_API_TESTS "Build Tests" ON)
-
-set(SC2_VERSION "5.0.14" CACHE STRING "Version of the target StarCraft II client")
-message(STATUS "Target SC2 version: ${SC2_VERSION}")
+set(FETCHCONTENT_QUIET DEPENDENCY_WARNINGS)
 
 # Use bin as the directory for all executables.
 # This will make protoc easy to find.
@@ -54,6 +66,16 @@ list(APPEND CMAKE_MODULE_PATH
     "${PROJECT_SOURCE_DIR}/thirdparty/cmake"
     "${PROJECT_SOURCE_DIR}/thirdparty/civetweb"
     "${PROJECT_SOURCE_DIR}/cmake/assets")
+
+#region Dependency No_Warnings_Flag
+if (NOT DEPENDENCY_WARNINGS)
+    if (MSVC)
+        set(DISABLE_WARNINGS_FLAG "/W0")
+    else () # GNU or Clang
+        set(DISABLE_WARNINGS_FLAG "-w")
+    endif ()
+endif ()
+#endregion
 
 # Build with c++20 support.
 set(CMAKE_CXX_STANDARD 20)
