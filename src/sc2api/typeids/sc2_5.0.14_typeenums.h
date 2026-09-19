@@ -7,23 +7,10 @@ utility located at https://github.com/cpp-sc2/codegen
 */
 
 #pragma once
-
-#include "sc2_types.h"
+#include <cstdint>
 
 namespace sc2 {
-enum class UNIT_TYPEID;
-enum class ABILITY_ID;
-enum class UPGRADE_ID;
-enum class BUFF_ID;
-enum class EFFECT_ID;
-
-using UnitTypeID = SC2Type<UNIT_TYPEID>;
-using AbilityID = SC2Type<ABILITY_ID>;
-using UpgradeID = SC2Type<UPGRADE_ID>;
-using BuffID = SC2Type<BUFF_ID>;
-using EffectID = SC2Type<EFFECT_ID>;
-
-enum class UNIT_TYPEID {
+enum class UNIT_TYPEID : std::uint16_t {
     ABANDONEDBUILDING = 1720,
     ACCELERATIONZONEFLYINGLARGE = 1990,
     ACCELERATIONZONEFLYINGMEDIUM = 1989,
@@ -1833,7 +1820,7 @@ enum class UNIT_TYPEID {
     _8SLOTBAG = 1788,
 };
 
-enum class ABILITY_ID {
+enum class ABILITY_ID : std::uint16_t {
     ADVANCEDCONSTRUCTION_CANCEL = 2840,
     AGGRESSIVEMUTATION = 2540,
     AIURLIGHTBRIDGEABANDONEDNE10OUT_BRIDGEEXTEND = 2568,
@@ -3060,7 +3047,7 @@ enum class ABILITY_ID {
     _330MMBARRAGECANNONS_CANCEL = 3321,
 };
 
-enum class UPGRADE_ID {
+enum class UPGRADE_ID : std::uint16_t {
     ABDOMINALFORTITUDE = 93,
     ADEPTKILLBOUNCE = 129,
     ADEPTPIERCINGATTACK = 130,
@@ -3367,7 +3354,7 @@ enum class UPGRADE_ID {
     _330MMBARRAGECANNONS = 151,
 };
 
-enum class BUFF_ID {
+enum class BUFF_ID : std::uint16_t {
     ACCELERATIONZONEFLYINGTEMPORALFIELD = 290,
     ACCELERATIONZONETEMPORALFIELD = 289,
     ADEPTDEATHCHECK = 135,
@@ -3672,7 +3659,7 @@ enum class BUFF_ID {
     _330MMBARRAGECANNONS = 209,
 };
 
-enum class EFFECT_ID {
+enum class EFFECT_ID : std::uint8_t {
     BLINDINGCLOUD = 10,
     CORROSIVEBILE = 11,
     GUARDIANSHIELD = 2,
@@ -3689,17 +3676,17 @@ enum class EFFECT_ID {
 };
 
 //! Converts a UNIT_TYPEID into a string of the same name.
-const char* UnitTypeToName(UnitTypeID id);
+auto UnitTypeToName(UNIT_TYPEID id) -> const char*;
 
 //! Converts a ABILITY_ID into a string of the same name.
-const char* AbilityTypeToName(AbilityID id);
+auto AbilityTypeToName(ABILITY_ID id) -> const char*;
 
 //! Converts a UPGRADE_ID into a string of the same name.
-const char* UpgradeIDToName(UpgradeID id);
+auto UpgradeIDToName(UPGRADE_ID id) -> const char*;
 
 //! Converts a BUFF_ID into a string of the same name.
-const char* BuffIDToName(BuffID id);
+auto BuffIDToName(BUFF_ID id) -> const char*;
 
 //! Converts a EFFECT_ID into a string of the same name.
-const char* EffectIDToName(EffectID id);
+auto EffectIDToName(EFFECT_ID id) -> const char*;
 }  // namespace sc2

@@ -6,7 +6,7 @@
 
 #include "sc2_common.h"
 #include "sc2_gametypes.h"
-#include "sc2_typeenums.h"
+#include "typeids/sc2_types.h"
 
 namespace sc2 {
 

@@ -593,107 +593,107 @@ bool Convert(const ResponseGameInfoPtr& response_game_info_ptr, GameInfo& game_i
 Race ConvertRaceFromProto(SC2APIProtocol::Race race) {
     switch (race) {
         case SC2APIProtocol::Terran: {
-            return Terran;
+            return Race::Terran;
         }
         case SC2APIProtocol::Zerg: {
-            return Zerg;
+            return Race::Zerg;
         }
         case SC2APIProtocol::Protoss: {
-            return Protoss;
+            return Race::Protoss;
         }
         default: {
             break;
         }
     }
-    return Random;
+    return Race::Random;
 }
 
 GameResult ConvertGameResultFromProto(SC2APIProtocol::Result result) {
     switch (result) {
         case SC2APIProtocol::Victory: {
-            return Win;
+            return GameResult::Win;
         }
         case SC2APIProtocol::Defeat: {
-            return Loss;
+            return GameResult::Loss;
         }
         case SC2APIProtocol::Tie: {
-            return Tie;
+            return GameResult::Tie;
         }
         default: {
             break;
         }
     }
-    return Undecided;
+    return GameResult::Undecided;
 }
 
 PlayerType ConvertPlayerTypeFromProto(SC2APIProtocol::PlayerType type) {
     switch (type) {
         case SC2APIProtocol::Participant: {
-            return Participant;
+            return PlayerType::Participant;
         }
         case SC2APIProtocol::Computer: {
-            return Computer;
+            return PlayerType::Computer;
         }
         case SC2APIProtocol::Observer: {
-            return Observer;
+            return PlayerType::Observer;
         }
     }
-    return Observer;
+    return PlayerType::Observer;
 }
 
 Difficulty ConvertDifficultyFromProto(SC2APIProtocol::Difficulty difficulty) {
     switch (difficulty) {
         case SC2APIProtocol::VeryEasy: {
-            return VeryEasy;
+            return Difficulty::VeryEasy;
         }
         case SC2APIProtocol::Easy: {
-            return Easy;
+            return Difficulty::Easy;
         }
         case SC2APIProtocol::Medium: {
-            return Medium;
+            return Difficulty::Medium;
         }
         case SC2APIProtocol::MediumHard: {
-            return MediumHard;
+            return Difficulty::MediumHard;
         }
         case SC2APIProtocol::Hard: {
-            return Hard;
+            return Difficulty::Hard;
         }
         case SC2APIProtocol::Harder: {
-            return HardVeryHard;
+            return Difficulty::HardVeryHard;
         }
         case SC2APIProtocol::VeryHard: {
-            return VeryHard;
+            return Difficulty::VeryHard;
         }
         case SC2APIProtocol::CheatVision: {
-            return CheatVision;
+            return Difficulty::CheatVision;
         }
         case SC2APIProtocol::CheatMoney: {
-            return CheatMoney;
+            return Difficulty::CheatMoney;
         }
         case SC2APIProtocol::CheatInsane: {
-            return CheatInsane;
+            return Difficulty::CheatInsane;
         }
     }
-    return VeryEasy;
+    return Difficulty::VeryEasy;
 }
 
 AIBuild ConvertAIBuildFromProto(SC2APIProtocol::AIBuild ai_build) {
     switch (ai_build) {
         case SC2APIProtocol::RandomBuild:
-            return RandomBuild;
+            return AIBuild::RandomBuild;
         case SC2APIProtocol::Rush:
-            return Rush;
+            return AIBuild::Rush;
         case SC2APIProtocol::Timing:
-            return Timing;
+            return AIBuild::Timing;
         case SC2APIProtocol::Power:
-            return Power;
+            return AIBuild::Power;
         case SC2APIProtocol::Macro:
-            return Macro;
+            return AIBuild::Macro;
         case SC2APIProtocol::Air:
-            return Air;
+            return AIBuild::Air;
     }
 
-    return RandomBuild;
+    return AIBuild::RandomBuild;
 }
 
 }  // namespace sc2

@@ -8,5 +8,5 @@
 #include "sc2_interfaces.h"
 #include "sc2_map_info.h"
 #include "sc2_replay_observer.h"
-#include "sc2_typeenums.h"
+#include "typeids/sc2_types.h"
 #include "sc2_unit.h"

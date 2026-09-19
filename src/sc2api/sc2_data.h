@@ -5,15 +5,16 @@
 #include <string>
 #include <vector>
 
+#include "sc2_common.h"
 #include "sc2_gametypes.h"
 #include "sc2_proto_interface.h"
-#include "sc2_typeenums.h"
+#include "sc2api/typeids/sc2_types.h"
 
 namespace sc2 {
 
 class ObservationInterface;
 
-typedef MessageResponsePtr<SC2APIProtocol::ResponseData> ResponseDataPtr;
+using ResponseDataPtr = MessageResponsePtr<SC2APIProtocol::ResponseData>;
 
 //! Indicates if an ability is available, and if that ability requires a point.
 struct AvailableAbility {
@@ -25,6 +26,8 @@ struct AvailableAbility {
     AbilityID ability_id = 0;
     //! Indicates if the ability requires a point to invoke.
     bool requires_point = false;
+
+    std::string ToString();
 };
 
 //! Data about an ability.
@@ -261,7 +264,7 @@ struct EffectData {
     std::string Log() const;
 };
 
-typedef std::vector<EffectData> Effects;
+using Effects = std::vector<EffectData>;
 
 //! Power source information for Protoss.
 struct PowerSource {

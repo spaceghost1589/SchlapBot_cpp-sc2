@@ -6,10 +6,15 @@
 #include "s2clientprotocol/data.pb.h"
 #include "sc2_interfaces.h"
 #include "sc2_proto_to_pods.h"
+#include "sc2api/typeids/sc2_types.h"
 
 // TODO: Fill out the log functions
 
 namespace sc2 {
+
+auto AvailableAbility::ToString() -> std::string {
+    return ability_id.TypeToName();
+}
 
 AbilityData::AbilityData()
     : available(false),
@@ -205,6 +210,7 @@ auto AbilityData::TargetToName() const -> std::string {
             return "PointOrUnit";
         case AbilityData::Target::PointOrNone:
             return "PointOrNone";
+        default : return "None";
     }
 }
 

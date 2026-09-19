@@ -3,21 +3,39 @@
 */
 #pragma once
 
+#include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
 
-#include "sc2_common.h"
+// #include "sc2_common.h"
 
 namespace sc2 {
 
 using Tag = uint64_t;
 static const Tag NullTag = 0LL;
 
-enum Race { Terran, Zerg, Protoss, Random };
+enum class Race : uint8_t { Terran, Zerg, Protoss, Random };
 
-enum GameResult { Win, Loss, Tie, Undecided };
+inline auto RaceToString(const Race race) -> std::string {
+    switch (race) {
+        // case NoRace  : return "No Race";
+        case Race::Terran:
+            return "Terran";
+        case Race::Zerg:
+            return "Zerg";
+        case Race::Protoss:
+            return "Protoss";
+        case Race::Random:
+            return "Random";
+        default:
+            return "No Race";
+    }
+}
 
-enum Difficulty {
+enum class GameResult : uint8_t { Win, Loss, Tie, Undecided };
+
+enum class Difficulty : uint8_t {
     VeryEasy = 1,
     Easy = 2,
     Medium = 3,
@@ -30,11 +48,54 @@ enum Difficulty {
     CheatInsane = 10
 };
 
-enum PlayerType { Participant = 1, Computer = 2, Observer = 3 };
+inline auto DifficultyToString(const Difficulty difficulty) -> std::string {
+    switch (difficulty) {
+        case Difficulty::VeryEasy:
+            return "Very Easy";
+        case Difficulty::Easy:
+            return "Easy";
+        case Difficulty::Medium:
+            return "Medium";
+        case Difficulty::MediumHard:
+            return "Medium Hard";
+        case Difficulty::Hard:
+            return "Hard";
+        case Difficulty::HardVeryHard:
+            return "Hard Very Hard";
+        case Difficulty::VeryHard:
+            return "Very Hard";
+        case Difficulty::CheatVision:
+            return "Cheat Vision";
+        case Difficulty::CheatMoney:
+            return "Cheat Money";
+        case Difficulty::CheatInsane:
+            return "Cheat Insane";
+    }
+    return "Is keyboard slamming a difficulty?";
+}
 
-enum AIBuild { RandomBuild = 1, Rush = 2, Timing = 3, Power = 4, Macro = 5, Air = 6 };
+enum class PlayerType : uint8_t { Participant = 1, Computer = 2, Observer = 3 };
 
-enum class ChatChannel { All = 0, Team = 1 };
+enum class AIBuild : uint8_t { RandomBuild = 1, Rush = 2, Timing = 3, Power = 4, Macro = 5, Air = 6 };
+
+inline auto AIBuildToString(const AIBuild build) -> std::string {
+    switch (build) {
+        case AIBuild::Rush:
+            return "Rush";
+        case AIBuild::Timing:
+            return "Timing";
+        case AIBuild::Power:
+            return "Power";
+        case AIBuild::Macro:
+            return "Macro";
+        case AIBuild::Air:
+            return "Air";
+        default:
+            return "Random Build";
+    }
+}  // AIBuildToString
+
+enum class ChatChannel : uint8_t { All = 0, Team = 1 };
 
 class Agent;
 
@@ -56,13 +117,18 @@ struct PlayerSetup {
     //! Build type, used by computer opponent.
     AIBuild ai_build;
 
-    PlayerSetup() : type(Participant), agent(nullptr), race(Terran), difficulty(Easy), ai_build(RandomBuild) {};
+    PlayerSetup()
+        : type(PlayerType::Participant),
+          agent(nullptr),
+          race(Race::Terran),
+          difficulty(Difficulty::Easy),
+          ai_build(AIBuild::RandomBuild) {};
 
-    PlayerSetup(PlayerType in_type, Race in_race, Agent* in_agent = nullptr, const std::string& in_player_name = "",
-                Difficulty in_difficulty = Easy, AIBuild in_ai_build = RandomBuild)
+    PlayerSetup(PlayerType in_type, Race in_race, Agent* in_agent = nullptr, std::string in_player_name = "",
+                Difficulty in_difficulty = Difficulty::Easy, AIBuild in_ai_build = AIBuild::RandomBuild)
         : type(in_type),
           agent(in_agent),
-          player_name(in_player_name),
+          player_name(std::move(in_player_name)),
           race(in_race),
           difficulty(in_difficulty),
           ai_build(in_ai_build) {
@@ -70,12 +136,18 @@ struct PlayerSetup {
 };
 
 static inline PlayerSetup CreateParticipant(Race race, Agent* agent, const std::string& player_name = "") {
-    return PlayerSetup(PlayerType::Participant, race, agent, player_name);
+    return {PlayerType::Participant, race, agent, player_name};
 }
 
-static inline PlayerSetup CreateComputer(Race race, Difficulty difficulty = Easy, AIBuild ai_build = RandomBuild,
-                                         const std::string& player_name = "") {
-    return PlayerSetup(PlayerType::Computer, race, nullptr, player_name, difficulty, ai_build);
+static inline auto CreateComputer(Race race = Race::Random, Difficulty difficulty = Difficulty::Easy,
+                                  AIBuild ai_build = AIBuild::RandomBuild, std::string computer_name = "")
+    -> PlayerSetup {
+    // Generates computer's name based on settings if no name is passed.
+    if (computer_name.empty()) {
+        computer_name =
+            +"Computer-" + RaceToString(race) + "-" + DifficultyToString(difficulty) + "-" + AIBuildToString(ai_build);
+    }
+    return {PlayerType::Computer, race, nullptr, computer_name, difficulty, ai_build};
 }
 
 //! Port setup for a client.
@@ -135,9 +207,9 @@ struct ReplayPlayerInfo {
     //! Selected player race. If the race is "Random", the race data member may be different.
     Race race_selected;
     //! If the player won or lost.
-    GameResult game_result;
+    GameResult game_result = GameResult::Undecided;
 
-    ReplayPlayerInfo() : player_id(0), mmr(-10000), apm(0), race(Random), race_selected(Random) {
+    ReplayPlayerInfo() : player_id(0), mmr(-10000), apm(0), race(Race::Random), race_selected(Race::Random) {
     }
 };
 

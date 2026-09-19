@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "sc2_typeenums.h"
+#include "typeids/sc2_types.h"
 #include "sc2_unit.h"
 
 namespace sc2 {
