@@ -1,11 +1,10 @@
 name: CI
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: #
   push:
     branches:
       - master
-      - v2.1.0
     paths-ignore:
       - '.github/ISSUE_TEMPLATE/**'
       - 'docs/**'
@@ -13,6 +12,7 @@ on:
       - 'CREDITS'
       - 'LICENSE'
       - '**.md'
+      - '**.dic'
   pull_request:
     paths-ignore:
       - '.github/ISSUE_TEMPLATE/**'
@@ -21,6 +21,7 @@ on:
       - 'CREDITS'
       - 'LICENSE'
       - '**.md'
+      - '**.dic'
 
 env:
   BUILD_TYPE: Release
