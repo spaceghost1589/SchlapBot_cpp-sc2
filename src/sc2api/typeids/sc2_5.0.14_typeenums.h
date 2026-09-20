@@ -1,4 +1,4 @@
-/*! \file sc2_typeenums.h
+/*! \file sc2_5.0.14_typeenums.h
 \brief A list of enums provided for your convenience.
 
 All units and abilities are represented as unsigned numbers in the StarCraft II engine. This file aims to provide

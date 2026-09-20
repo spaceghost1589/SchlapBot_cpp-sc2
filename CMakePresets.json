@@ -1,68 +1,100 @@
 {
-    "version": 4,
-    "cmakeMinimumRequired": {
-        "major": 4,
-        "minor": 3,
-        "patch": 0
-    },
-    "configurePresets": [
-      {
-        "binaryDir": "${sourceDir}/build/${presetName}",
-        "cacheVariables": {
-          "CMAKE_CXX_STANDARD": "20"
-        },
-        "description": "Base Ninja inheritance which all other build are based on",
-        "generator": "Ninja",
-        "hidden": true,
-        "installDir": "${sourceDir}/install/${presetName}",
-        "name": "base-Ninja",
-        "warnings": {
-          "dev": false
-        }
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 15,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "20"
       },
-      {
-        "architecture": {
-          "value": "x64",
-          "strategy": "external"
-        },
-        "cmakeExecutable": "C:/SC2AI/_Resources/_toolchains/CMake/cmake-4.4.3-windows-x86_64/bin/cmake.exe",
-        "condition": {
-          "type": "equals",
-          "lhs": "${hostSystemName}",
-          "rhs": "Windows"
-        },
-        "description": "Base Window's MSVC inheritance which all other Windows builds are based on",
-        "hidden": true,
-        "inherits": "base-Ninja",
-        "name": "base-windows-msvc",
-        "toolset": {
-          "value": "host=x64",
-          "strategy": "external"
-        }
-      },
-      {
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "RelWithDebInfo-x64"
-        },
-        "displayName": "RelWithDebInfo",
-        "inherits": "base-windows-msvc",
-        "name": "x64-RelWithDebInfo"
-      },
-      {
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Release"
-        },
-        "displayName": "Release",
-        "inherits": "base-windows-msvc",
-        "name": "x64-Release"
-      },
-      {
-        "cacheVariables": {
-          "CMAKE_BUILD_TYPE": "Debug"
-        },
-        "displayName": "Debug",
-        "inherits": "base-windows-msvc",
-        "name": "x64-Debug"
+      "description": "Base Ninja inheritance which all other build are based on",
+      "generator": "Ninja",
+      "hidden": true,
+      "installDir": "${sourceDir}/install/${presetName}",
+      "name": "base-Ninja",
+      "warnings": {
+        "dev": false
       }
-    ]
+    },
+    {
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cmakeExecutable": "C:/SC2AI/_Resources/_toolchains/CMake/cmake-4.4.3-windows-x86_64/bin/cmake.exe",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "description": "Base Window's MSVC inheritance which all other Windows builds are based on",
+      "hidden": true,
+      "inherits": "base-Ninja",
+      "name": "windows-base",
+      "toolset": {
+        "value": "host=x64",
+        "strategy": "external"
+      }
+    },
+    {
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo-x64"
+      },
+      "displayName": "RelWithDebInfo",
+      "inherits": "windows-base",
+      "name": "x64-RelWithDebInfo"
+    },
+    {
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      },
+      "displayName": "Release",
+      "inherits": "windows-base",
+      "name": "x64-Release"
+    },
+    {
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "displayName": "Debug",
+      "inherits": "windows-base",
+      "name": "x64-Debug"
+    },
+    {
+      "name": "Clang-RelWithDebInfo",
+      "displayName": "Windows Clang (Native)",
+      "description": "Build with native LLVM/Clang and Ninja on Windows",
+      "inherits": "windows-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo-x64",
+        "CMAKE_C_COMPILER": "C:/Program Files/LLVM/bin/clang.exe",
+        "CMAKE_CXX_COMPILER": "C:/Program Files/LLVM/bin/clang++.exe",
+        "CMAKE_RC_COMPILER": "C:/Program Files/LLVM/bin/llvm-rc.exe",
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_LINKER": "C:/Program Files/LLVM/bin/lld-link.exe",
+        "CMAKE_C_FLAGS_INIT": "-fuse-ld=lld",
+        "CMAKE_CXX_FLAGS_INIT": "-fuse-ld=lld"
+      }
+    },
+    {
+      "name": "minGW-RelWithDebInfo",
+      "displayName": "minGW Max RelWithDebInfo",
+      "description": "Build with newest verstions all toolchains",
+      "inherits": "x64-RelWithDebInfo",
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "MinGW"
+        }
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "C:\\SC2AI\\_Resources\\_toolchains\\MinGW\\mingw64_16.2.0-rt_v14-rev1\\bin\\gcc.exe",
+        "CMAKE_CXX_COMPILER": "C:\\SC2AI\\_Resources\\_toolchains\\MinGW\\mingw64_16.2.0-rt_v14-rev1\\bin\\c++.exe",
+        "CMAKE_CXX_STANDARD": "26"
+      }
+    }
+  ]
 }

@@ -1,6 +1,7 @@
 #include "sc2_unit.h"
 
 #include <cassert>
+#include <functional>
 #include <iostream>
 
 #include "s2clientprotocol/sc2api.pb.h"
@@ -68,8 +69,8 @@ void UnitPool::MarkDead(Tag tag) {
     tag_to_existing_unit_.erase(tag);
 }
 
-void UnitPool::ForEachExistingUnit(const std::function<void(Unit& unit)>& functor) const {
-    for (const auto& u : tag_to_existing_unit_) {
+void UnitPool::ForEachExistingUnit(const std::function_ref<void(Unit& unit)>& functor) const {
+    for (const  std::pair<Tag, Unit*>& u : tag_to_existing_unit_) {
         assert(u.second);
         functor(*u.second);
     }

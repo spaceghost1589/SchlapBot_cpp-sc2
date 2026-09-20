@@ -1,6 +1,6 @@
 #include "SchlapBot.h"
 
-#include <stdint.h>
+#include <cstdint>
 
 #include <algorithm>
 #include <chrono>
@@ -23,11 +23,11 @@ using enum Unit::Alliance;
 
 
 
-// The main bot class.
+
 ResourceManager resource_manager;
 
 
-
+// The main bot class.
 void SchlapBot::OnGameFullStart() {
     resource_manager = ResourceManager(this);
 }

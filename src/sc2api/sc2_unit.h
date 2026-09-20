@@ -239,7 +239,7 @@ public:
     void MarkDead(Tag tag);
 
     // TODO(?): Change alive -> Exist
-    void ForEachExistingUnit(const std::function<void(Unit& unit)>& functor) const;
+    void ForEachExistingUnit(const std::function_ref<void(Unit& unit)>& functor) const;
     void ClearExisting();
     bool UnitExists(Tag tag);
 

@@ -1,7 +1,8 @@
 #include "sc2_common.h"
 
 #include <random>
-#include <thread>
+#include <cmath>
+// #include <thread>
 
 // Avoiding use of "thread_local" as that isn't supported in older versions of Xcode.
 #if defined(__clang__) || defined(__GNUC__)
@@ -12,142 +13,138 @@
 
 namespace sc2 {
 
-Point3D& Point3D::operator+=(const Point3D& rhs) {
+auto Point3D::operator+=(const Point3D& rhs) -> Point3D& {
     x += rhs.x;
     y += rhs.y;
     z += rhs.z;
     return *this;
 }
 
-Point3D& Point3D::operator-=(const Point3D& rhs) {
+auto Point3D::operator-=(const Point3D& rhs) -> Point3D& {
     x -= rhs.x;
     y -= rhs.y;
     z -= rhs.z;
     return *this;
 }
 
-Point3D& Point3D::operator*=(float rhs) {
+auto Point3D::operator*=(float rhs) -> Point3D& {
     x *= rhs;
     y *= rhs;
     z *= rhs;
     return *this;
 }
 
-Point3D& Point3D::operator/=(float rhs) {
+auto Point3D::operator/=(float rhs) -> Point3D& {
     x /= rhs;
     y /= rhs;
     z /= rhs;
     return *this;
 }
 
-bool Point3D::operator==(const Point3D& rhs) const {
+auto Point3D::operator==(const Point3D& rhs) const -> bool {
     return x == rhs.x && y == rhs.y && z == rhs.z;
 }
 
-bool Point3D::operator!=(const Point3D& rhs) const {
+auto Point3D::operator!=(const Point3D& rhs) const -> bool {
     return !(*this == rhs);
 }
 
-Point3D operator+(const Point3D& lhs, const Point3D& rhs) {
+auto operator+(const Point3D& lhs, const Point3D& rhs) -> Point3D {
     return {lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z};
 }
 
-Point3D operator-(const Point3D& lhs, const Point3D& rhs) {
+auto operator-(const Point3D& lhs, const Point3D& rhs) -> Point3D {
     return {lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z};
 }
 
-Point3D operator*(const Point3D& lhs, float rhs) {
+auto operator*(const Point3D& lhs, float rhs) -> Point3D {
     return {lhs.x * rhs, lhs.y * rhs, lhs.z * rhs};
 }
 
-Point3D operator*(float lhs, const Point3D& rhs) {
+auto operator*(float lhs, const Point3D& rhs) -> Point3D {
     return rhs * lhs;
 }
 
-Point3D operator/(const Point3D& lhs, float rhs) {
+auto operator/(const Point3D& lhs, float rhs) -> Point3D {
     return {lhs.x / rhs, lhs.y / rhs, lhs.z / rhs};
 }
 
-Point3D operator/(float lhs, const Point3D& rhs) {
+auto operator/(float lhs, const Point3D& rhs) -> Point3D {
     return rhs / lhs;
 }
 
-Point2D& Point2D::operator+=(const Point2D& rhs) {
+auto Point2D::operator+=(const Point2D& rhs) -> Point2D& {
     x += rhs.x;
     y += rhs.y;
     return *this;
 }
 
-Point2D& Point2D::operator-=(const Point2D& rhs) {
+auto Point2D::operator-=(const Point2D& rhs) -> Point2D& {
     x -= rhs.x;
     y -= rhs.y;
     return *this;
 }
 
-Point2D& Point2D::operator*=(float rhs) {
+auto Point2D::operator*=(float rhs) -> Point2D& {
     x *= rhs;
     y *= rhs;
     return *this;
 }
 
-Point2D& Point2D::operator/=(float rhs) {
+auto Point2D::operator/=(float rhs) -> Point2D& {
     x /= rhs;
     y /= rhs;
     return *this;
 }
 
-bool Point2D::operator==(const Point2D& rhs) const {
+auto Point2D::operator==(const Point2D& rhs) const -> bool {
     return x == rhs.x && y == rhs.y;
 }
 
-bool Point2D::operator!=(const Point2D& rhs) const {
+auto Point2D::operator!=(const Point2D& rhs) const -> bool {
     return !(*this == rhs);
 }
 
-Point2D operator+(const Point2D& lhs, const Point2D& rhs) {
+auto operator+(const Point2D& lhs, const Point2D& rhs) -> Point2D {
     return {lhs.x + rhs.x, lhs.y + rhs.y};
 }
 
-Point2D operator-(const Point2D& lhs, const Point2D& rhs) {
+auto operator-(const Point2D& lhs, const Point2D& rhs) -> Point2D {
     return {lhs.x - rhs.x, lhs.y - rhs.y};
 }
 
-Point2D operator*(const Point2D& lhs, float rhs) {
+auto operator*(const Point2D& lhs, float rhs) -> Point2D {
     return {lhs.x * rhs, lhs.y * rhs};
 }
 
-Point2D operator*(float lhs, const Point2D& rhs) {
+auto operator*(float lhs, const Point2D& rhs) -> Point2D {
     return rhs * lhs;
 }
 
-Point2D operator/(const Point2D& lhs, float rhs) {
+auto operator/(const Point2D& lhs, float rhs) -> Point2D {
     return {lhs.x / rhs, lhs.y / rhs};
 }
 
-Point2D operator/(float lhs, const Point2D& rhs) {
+auto operator/(float lhs, const Point2D& rhs) -> Point2D {
     return rhs / lhs;
 }
 
-bool Point2DI::operator==(const Point2DI& rhs) const {
+auto Point2DI::operator==(const Point2DI& rhs) const -> bool {
     return x == rhs.x && y == rhs.y;
 }
 
-bool Point2DI::operator!=(const Point2DI& rhs) const {
-    return !(*this == rhs);
-}
-
-int Rect2DI::Width() const {
+auto Rect2DI::Width() const -> int {
     return to.x - from.x;
 }
 
-int Rect2DI::Height() const {
+auto Rect2DI::Height() const -> int {
     return to.y - from.y;
 }
 
-bool Rect2DI::Contain(const sc2::Point2DI& point) const {
+auto Rect2DI::Contain(const sc2::Point2DI& point) const -> bool {
     return point.x >= this->from.x && point.x < this->Width() && point.y >= this->from.y && point.y < this->Height();
 }
-
+namespace {
 struct RandomGenerator {
     RandomGenerator() : mt(rd()) {
     }
@@ -155,52 +152,58 @@ struct RandomGenerator {
     std::mt19937 mt;
 };
 
-static std::mt19937& GetGenerator() {
+auto GetGenerator() -> std::mt19937& {
     static TLS_OBJECT RandomGenerator* generator;
-    if (!generator)
+    if (generator == nullptr) {
         generator = new RandomGenerator();
+    }
     return generator->mt;
 }
+}  // namespace
 
-float GetRandomScalar() {
+auto GetRandomScalar() -> float {
     static std::uniform_real_distribution<float> dist(-1.0F, 1.0F);
     return dist(GetGenerator());
 }
 
-float GetRandomFraction() {
+auto GetRandomFraction() -> float {
     static std::uniform_real_distribution<float> dist(0.0F, 1.0F);
     return dist(GetGenerator());
 }
 
-int GetRandomInteger(int min, int max) {
+auto GetRandomInteger(int min, int max) -> int {
     std::uniform_int_distribution<int> dist(min, max);
     return dist(GetGenerator());
 }
 
-float Distance2D(const Point2D& a, const Point2D& b) {
+auto Distance2D(const Point2D& a, const Point2D& b) -> float {
     const Point2D diff = a - b;
     return std::sqrt(Dot2D(diff, diff));
 }
 
-float DistanceSquared2D(const Point2D& a, const Point2D& b) {
+auto DistanceSquared2D(const Point2D& a, const Point2D& b) -> float {
     const Point2D diff = a - b;
     return Dot2D(diff, diff);
+}
+
+auto CompareDistance2D(const Point2D& a, const Point2D& b, const Point2D& datum) -> bool {
+    return DistanceSquared2D(datum, a) < DistanceSquared2D(datum, b);
 }
 
 void Normalize2D(Point2D& a) {
     a /= std::sqrt(Dot2D(a, a));
 }
 
-float Dot2D(const Point2D& a, const Point2D& b) {
-    return a.x * b.x + a.y * b.y;
+auto Dot2D(const Point2D& a, const Point2D& b) -> float {
+    return (a.x * b.x) + (a.y * b.y);
 }
 
-float Distance3D(const Point3D& a, const Point3D& b) {
+auto Distance3D(const Point3D& a, const Point3D& b) -> float {
     const Point3D diff = a - b;
     return std::sqrt(Dot3D(diff, diff));
 }
 
-float DistanceSquared3D(const Point3D& a, const Point3D& b) {
+auto DistanceSquared3D(const Point3D& a, const Point3D& b) -> float {
     const Point3D diff = a - b;
     return Dot3D(diff, diff);
 }
@@ -209,8 +212,8 @@ void Normalize3D(Point3D& a) {
     a /= std::sqrt(Dot3D(a, a));
 }
 
-float Dot3D(const Point3D& a, const Point3D& b) {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
+auto Dot3D(const Point3D& a, const Point3D& b) -> float {
+    return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 }
 
 }  // namespace sc2

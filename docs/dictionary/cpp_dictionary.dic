@@ -29,6 +29,7 @@ cpuinfo
 cpumask
 csidl
 cstdint
+cstdlib
 CYCLECLOCK
 datap
 dcross

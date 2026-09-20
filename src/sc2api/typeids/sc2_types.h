@@ -32,7 +32,7 @@ public:
 
     //! Test equivalence.
     //!< \return 'true' if the values are equal.
-    auto operator==(SC2Type<T> type_id) const -> bool {
+    auto operator==(SC2Type type_id) const -> bool {
         return type_id_ == type_id.type_id_;
     }
     auto operator==(T type_id) const -> bool {
@@ -96,7 +96,7 @@ public:
     }
 
 private:
-    uint16_t type_id_ {0U};
+    int type_id_ {0U};
 };
 
 using UnitTypeID = SC2Type<UNIT_TYPEID>;

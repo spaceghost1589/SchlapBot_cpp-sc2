@@ -1,77 +1,92 @@
 #include "sc2_unit_filters.h"
 
+#include <algorithm>
+#include <vector>
+
+#include "sc2api/sc2_unit.h"
+#include "sc2api/typeids/sc2_5.0.14_typeenums.h"
+#include "sc2api/typeids/sc2_types.h"
+
 namespace sc2 {
 
-IsUnit::IsUnit(UNIT_TYPEID type_) : m_type(type_) {
+IsUnit::IsUnit(const UNIT_TYPEID type) : m_type(type) {
 }
 
-bool IsUnit::operator()(const Unit& unit_) const {
-    return unit_.unit_type == m_type;
+auto IsUnit::operator()(const Unit& unit) const -> bool {
+    return unit.unit_type == m_type;
 }
 
-IsUnits::IsUnits(const std::vector<UNIT_TYPEID>& types_) : m_types(types_) {
+IsUnits::IsUnits(const std::vector<UNIT_TYPEID>& types) : m_types(types) {
 }
 
-bool IsUnits::operator()(const Unit& unit_) const {
+auto IsUnits::operator()(const Unit& unit) const -> bool {
     for (const auto& type : m_types) {
-        if (unit_.unit_type == type)
+        if (unit.unit_type == type) {
             return true;
+        }
     }
 
     return false;
 }
 
-bool IsTownHall::operator()(const Unit& unit_) const {
+auto IsBasicTownHall::operator()(const Unit& unit_) const -> bool {
     return (*this)(unit_.unit_type);
 }
 
-bool IsTownHall::operator()(UNIT_TYPEID type_) const {
+auto IsBasicTownHall::operator()(const UNIT_TYPEID type_) const -> bool {
     return type_ == UNIT_TYPEID::PROTOSS_NEXUS || type_ == UNIT_TYPEID::TERRAN_COMMANDCENTER ||
-           type_ == UNIT_TYPEID::TERRAN_COMMANDCENTERFLYING || type_ == UNIT_TYPEID::TERRAN_ORBITALCOMMAND ||
+           type_ == UNIT_TYPEID::ZERG_HATCHERY;
+}
+
+auto IsTownHall::operator()(const Unit& unit_) const -> bool {
+    return (*this)(unit_.unit_type);
+}
+
+auto IsTownHall::operator()(const UNIT_TYPEID type_) const -> bool {
+    return type_ == UNIT_TYPEID::TERRAN_COMMANDCENTERFLYING || type_ == UNIT_TYPEID::TERRAN_ORBITALCOMMAND ||
            type_ == UNIT_TYPEID::TERRAN_ORBITALCOMMANDFLYING || type_ == UNIT_TYPEID::TERRAN_PLANETARYFORTRESS ||
-           type_ == UNIT_TYPEID::ZERG_HATCHERY || type_ == UNIT_TYPEID::ZERG_HIVE || type_ == UNIT_TYPEID::ZERG_LAIR;
+           type_ == UNIT_TYPEID::ZERG_HIVE || type_ == UNIT_TYPEID::ZERG_LAIR || IsBasicTownHall{}(type_);
 }
 
-bool IsMineralPatch::operator()(const Unit& unit_) const {
-    return (*this)(unit_.unit_type);
+auto IsMineralPatch::operator()(const Unit& unit) const -> bool {
+    return (*this)(unit.unit_type);
 }
 
-bool IsMineralPatch::operator()(UNIT_TYPEID type_) const {
-    return type_ == UNIT_TYPEID::NEUTRAL_BATTLESTATIONMINERALFIELD750 ||
-           type_ == UNIT_TYPEID::NEUTRAL_BATTLESTATIONMINERALFIELD ||
-           type_ == UNIT_TYPEID::NEUTRAL_LABMINERALFIELD750 || type_ == UNIT_TYPEID::NEUTRAL_LABMINERALFIELD ||
-           type_ == UNIT_TYPEID::NEUTRAL_MINERALFIELD750 || type_ == UNIT_TYPEID::NEUTRAL_MINERALFIELD ||
-           type_ == UNIT_TYPEID::NEUTRAL_PURIFIERMINERALFIELD750 ||
-           type_ == UNIT_TYPEID::NEUTRAL_PURIFIERMINERALFIELD ||
-           type_ == UNIT_TYPEID::NEUTRAL_PURIFIERRICHMINERALFIELD750 ||
-           type_ == UNIT_TYPEID::NEUTRAL_PURIFIERRICHMINERALFIELD ||
-           type_ == UNIT_TYPEID::NEUTRAL_RICHMINERALFIELD750 || type_ == UNIT_TYPEID::NEUTRAL_RICHMINERALFIELD;
+auto IsMineralPatch::operator()(const UNIT_TYPEID type) const -> bool {
+    return type == UNIT_TYPEID::NEUTRAL_BATTLESTATIONMINERALFIELD750 ||
+           type == UNIT_TYPEID::NEUTRAL_BATTLESTATIONMINERALFIELD || type == UNIT_TYPEID::NEUTRAL_LABMINERALFIELD750 ||
+           type == UNIT_TYPEID::NEUTRAL_LABMINERALFIELD || type == UNIT_TYPEID::NEUTRAL_MINERALFIELD750 ||
+           type == UNIT_TYPEID::NEUTRAL_MINERALFIELD || type == UNIT_TYPEID::NEUTRAL_PURIFIERMINERALFIELD750 ||
+           type == UNIT_TYPEID::NEUTRAL_PURIFIERMINERALFIELD ||
+           type == UNIT_TYPEID::NEUTRAL_PURIFIERRICHMINERALFIELD750 ||
+           type == UNIT_TYPEID::NEUTRAL_PURIFIERRICHMINERALFIELD || type == UNIT_TYPEID::NEUTRAL_RICHMINERALFIELD750 ||
+           type == UNIT_TYPEID::NEUTRAL_RICHMINERALFIELD;
 }
 
-bool IsVisibleMineralPatch::operator()(const Unit& unit_) const {
-    return unit_.mineral_contents > 0;
+auto IsVisibleMineralPatch::operator()(const Unit& unit) const -> bool {
+    return unit.mineral_contents > 0;
 }
 
-bool IsGeyser::operator()(const Unit& unit_) const {
-    return (*this)(unit_.unit_type);
+auto IsGeyser::operator()(const Unit& unit) const -> bool {
+    return (*this)(unit.unit_type);
 }
 
-bool IsGeyser::operator()(UNIT_TYPEID type_) const {
-    return type_ == UNIT_TYPEID::NEUTRAL_VESPENEGEYSER || type_ == UNIT_TYPEID::NEUTRAL_PROTOSSVESPENEGEYSER ||
-           type_ == UNIT_TYPEID::NEUTRAL_SPACEPLATFORMGEYSER || type_ == UNIT_TYPEID::NEUTRAL_PURIFIERVESPENEGEYSER ||
-           type_ == UNIT_TYPEID::NEUTRAL_SHAKURASVESPENEGEYSER || type_ == UNIT_TYPEID::NEUTRAL_RICHVESPENEGEYSER;
+auto IsGeyser::operator()(const UNIT_TYPEID type) const -> bool {
+    return type == UNIT_TYPEID::NEUTRAL_VESPENEGEYSER || type == UNIT_TYPEID::NEUTRAL_PROTOSSVESPENEGEYSER ||
+           type == UNIT_TYPEID::NEUTRAL_SPACEPLATFORMGEYSER || type == UNIT_TYPEID::NEUTRAL_PURIFIERVESPENEGEYSER ||
+           type == UNIT_TYPEID::NEUTRAL_SHAKURASVESPENEGEYSER || type == UNIT_TYPEID::NEUTRAL_RICHVESPENEGEYSER;
 }
 
-bool IsVisibleGeyser::operator()(const Unit& unit_) const {
-    return unit_.vespene_contents > 0;
+auto IsVisibleGeyser::operator()(const Unit& unit) const -> bool {
+    return unit.vespene_contents > 0;
 }
 
-bool IsBuilding::operator()(const Unit& unit_) const {
-    return (*this)(unit_.unit_type);
+auto IsBuilding::operator()(const Unit& unit) const -> bool {
+    return (*this)(unit.unit_type);
 }
 
-bool IsBuilding::operator()(UNIT_TYPEID type_) const {
-    switch (type_) {
+auto IsBuilding::operator()(const UNIT_TYPEID type) const -> bool {
+    switch (type) {
         // Terran
         case UNIT_TYPEID::TERRAN_ARMORY:
         case UNIT_TYPEID::TERRAN_BARRACKS:
@@ -129,23 +144,23 @@ bool IsBuilding::operator()(UNIT_TYPEID type_) const {
         case UNIT_TYPEID::ZERG_ULTRALISKCAVERN:
 
         // Protoss
-        case sc2::UNIT_TYPEID::PROTOSS_ASSIMILATOR:
-        case sc2::UNIT_TYPEID::PROTOSS_CYBERNETICSCORE:
-        case sc2::UNIT_TYPEID::PROTOSS_DARKSHRINE:
-        case sc2::UNIT_TYPEID::PROTOSS_FLEETBEACON:
-        case sc2::UNIT_TYPEID::PROTOSS_FORGE:
-        case sc2::UNIT_TYPEID::PROTOSS_GATEWAY:
-        case sc2::UNIT_TYPEID::PROTOSS_NEXUS:
-        case sc2::UNIT_TYPEID::PROTOSS_PHOTONCANNON:
-        case sc2::UNIT_TYPEID::PROTOSS_PYLON:
-        case sc2::UNIT_TYPEID::PROTOSS_PYLONOVERCHARGED:
-        case sc2::UNIT_TYPEID::PROTOSS_ROBOTICSBAY:
-        case sc2::UNIT_TYPEID::PROTOSS_ROBOTICSFACILITY:
-        case sc2::UNIT_TYPEID::PROTOSS_STARGATE:
-        case sc2::UNIT_TYPEID::PROTOSS_TEMPLARARCHIVE:
-        case sc2::UNIT_TYPEID::PROTOSS_TWILIGHTCOUNCIL:
-        case sc2::UNIT_TYPEID::PROTOSS_WARPGATE:
-        case sc2::UNIT_TYPEID::PROTOSS_SHIELDBATTERY:
+        case UNIT_TYPEID::PROTOSS_ASSIMILATOR:
+        case UNIT_TYPEID::PROTOSS_CYBERNETICSCORE:
+        case UNIT_TYPEID::PROTOSS_DARKSHRINE:
+        case UNIT_TYPEID::PROTOSS_FLEETBEACON:
+        case UNIT_TYPEID::PROTOSS_FORGE:
+        case UNIT_TYPEID::PROTOSS_GATEWAY:
+        case UNIT_TYPEID::PROTOSS_NEXUS:
+        case UNIT_TYPEID::PROTOSS_PHOTONCANNON:
+        case UNIT_TYPEID::PROTOSS_PYLON:
+        case UNIT_TYPEID::PROTOSS_PYLONOVERCHARGED:
+        case UNIT_TYPEID::PROTOSS_ROBOTICSBAY:
+        case UNIT_TYPEID::PROTOSS_ROBOTICSFACILITY:
+        case UNIT_TYPEID::PROTOSS_STARGATE:
+        case UNIT_TYPEID::PROTOSS_TEMPLARARCHIVE:
+        case UNIT_TYPEID::PROTOSS_TWILIGHTCOUNCIL:
+        case UNIT_TYPEID::PROTOSS_WARPGATE:
+        case UNIT_TYPEID::PROTOSS_SHIELDBATTERY:
             return true;
 
         default:
@@ -153,33 +168,32 @@ bool IsBuilding::operator()(UNIT_TYPEID type_) const {
     }
 }
 
-bool IsWorker::operator()(const Unit& unit_) const {
+auto IsWorker::operator()(const Unit& unit_) const -> bool {
     return (*this)(unit_.unit_type);
 }
 
-bool IsWorker::operator()(UNIT_TYPEID type_) const {
-    return type_ == sc2::UNIT_TYPEID::TERRAN_SCV || type_ == sc2::UNIT_TYPEID::ZERG_DRONE ||
-           type_ == sc2::UNIT_TYPEID::PROTOSS_PROBE;
+auto IsWorker::operator()(const UNIT_TYPEID type_) const -> bool {
+    return type_ == UNIT_TYPEID::TERRAN_SCV || type_ == UNIT_TYPEID::ZERG_DRONE || type_ == UNIT_TYPEID::PROTOSS_PROBE;
 }
 
-bool IsVisible::operator()(const Unit& unit_) const {
+auto IsVisible::operator()(const Unit& unit_) const -> bool {
     return unit_.display_type == Unit::Visible;
 };
 
-bool IsCarryingMinerals(const Unit& unit) {
-    auto is_mineral = [](const BuffID& buff) {
+auto IsCarryingMinerals(const Unit& unit) -> bool {
+    const auto is_mineral = [](const BuffID& buff) -> bool {
         return buff == BUFF_ID::CARRYMINERALFIELDMINERALS || buff == BUFF_ID::CARRYHIGHYIELDMINERALFIELDMINERALS;
     };
-    return std::find_if(unit.buffs.begin(), unit.buffs.end(), is_mineral) != unit.buffs.end();
+    return std::ranges::find_if(unit.buffs, is_mineral) != unit.buffs.end();
 }
 
-bool IsCarryingVespene(const Unit& unit) {
-    auto is_vespene = [](const BuffID& buff) {
+auto IsCarryingVespene(const Unit& unit) -> bool {
+    const auto is_vespene = [](const BuffID& buff) -> bool {
         return buff == BUFF_ID::CARRYHARVESTABLEVESPENEGEYSERGAS ||
                buff == BUFF_ID::CARRYHARVESTABLEVESPENEGEYSERGASPROTOSS ||
                buff == BUFF_ID::CARRYHARVESTABLEVESPENEGEYSERGASZERG;
     };
-    return std::find_if(unit.buffs.begin(), unit.buffs.end(), is_vespene) != unit.buffs.end();
+    return std::ranges::find_if(unit.buffs, is_vespene) != unit.buffs.end();
 }
 
 }  // namespace sc2
