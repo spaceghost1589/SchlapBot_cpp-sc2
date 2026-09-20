@@ -11,8 +11,8 @@
 #include "sc2api/sc2_unit_filters.h"
 
 namespace {
-const float PI = std::numbers::pi_v<float>;
-const float full_circle = 360.0F;
+constexpr float PI = std::numbers::pi_v<float>;
+constexpr float full_circle = 360.0F;
 }  // namespace
 
 namespace sc2::search {

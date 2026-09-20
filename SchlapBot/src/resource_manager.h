@@ -51,7 +51,7 @@ struct ResourceManager {
     void AssignWorkerStart(Expansion& expansion) const;
     // void AssignWorkerStart_SpeedTest(const Units& units);
 
-    // void SpeedMineWorker(std::array<const Unit*, 3>);
+    // void ResourceManager::SpeedMine(Expansion expansion);
 
     // ExpansionResources BuildResourceToWorker (const Unit* townhall);
 

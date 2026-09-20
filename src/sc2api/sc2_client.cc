@@ -1,13 +1,17 @@
 #include "sc2_client.h"
 
-#include <algorithm>
+// #include <algorithm>
 #include <cassert>
 #include <fstream>
 #include <iostream>
 #include <limits>
-#include <unordered_map>
+#include <string>
+// #include <unordered_map>
 
-#include "s2clientprotocol/sc2api.pb.h"
+#include <s2clientprotocol/sc2api.pb.h>
+#include <s2clientprotocol/raw.pb.h>
+#include <s2clientprotocol/debug.pb.h>
+
 #include "sc2_common.h"
 #include "sc2_control_interfaces.h"
 #include "sc2_game_settings.h"
@@ -15,6 +19,7 @@
 #include "sc2_proto_interface.h"
 #include "sc2_proto_to_pods.h"
 #include "sc2utils/sc2_manage_process.h"
+#include "sc2api/sc2_map_info.h"
 
 namespace {
 
@@ -33,35 +38,41 @@ private:
 MapState::MapState(const SC2APIProtocol::MapState& map) : creep_data_(map.creep()), visibility_data_(map.visibility()) {
 }
 
-bool MapState::HasCreep(const sc2::Point2D& point) const {
+auto MapState::HasCreep(const sc2::Point2D& point) const -> bool {
     if (creep_data_.BPP() == 1) {
-        bool value;
-        if (!creep_data_.GetBit(point, &value))
+        bool value = false;
+        if (!creep_data_.GetBit(point, &value)) {
             return false;
+}
 
         return value;
     }
 
-    unsigned char value;
-    if (!creep_data_.GetBit(point, &value))
+    unsigned char value = 0;
+    if (!creep_data_.GetBit(point, &value)) {
         return false;
+}
 
     return value > 0;
 }
 
-sc2::Visibility MapState::GetVisibility(const sc2::Point2D& point) const {
-    unsigned char value;
-    if (!visibility_data_.GetBit(point, &value))
+auto MapState::GetVisibility(const sc2::Point2D& point) const -> sc2::Visibility {
+    unsigned char value = 0;
+    if (!visibility_data_.GetBit(point, &value)) {
         return sc2::Visibility::FullHidden;
+}
 
-    if (value == 0)
+    if (value == 0) {
         return sc2::Visibility::Hidden;
+}
 
-    if (value == 1)
+    if (value == 1) {
         return sc2::Visibility::Fogged;
+}
 
-    if (value == 2)
+    if (value == 2) {
         return sc2::Visibility::Visible;
+}
 
     return sc2::Visibility::FullHidden;
 }
@@ -140,7 +151,7 @@ public:
     uint32_t GetPlayerID() const {
         return player_id_;
     }
-    uint32_t GetGameLoop() const final {
+    auto GetGameLoop() const -> uint32_t final {
         return current_game_loop_;
     }
     Units GetUnits() const final;
@@ -914,10 +925,11 @@ public:
     ControlInterface& control_;
 
     // Debug display.
-    struct DebugText {
+    struct DebugText
+    {
         std::string text;
-        bool has_coords;
-        bool is_3d;
+        bool has_coords {false};
+        bool is_3d {false};
         Point3D pt;
         Color color;
         uint32_t size = 0;
@@ -941,7 +953,7 @@ public:
     struct DebugSphere {
         Point3D p_;
         float r_;
-        Color color_;
+        Color color;
     };
     std::vector<DebugSphere> debug_sphere_;
 
@@ -1022,7 +1034,7 @@ DebugImp::DebugImp(ProtoInterface& proto, ObservationInterface& observation, Con
       score_(0.0F) {
 }
 
-void DebugImp::DebugTextOut(const std::string& out, Color color) {
+void DebugImp::DebugTextOut(const std::string& out, const Color color) {
     DebugText debug_text;
     debug_text.text = out;
     debug_text.has_coords = false;
@@ -1030,7 +1042,9 @@ void DebugImp::DebugTextOut(const std::string& out, Color color) {
     debug_text_.push_back(debug_text);
 }
 
-void DebugImp::DebugTextOut(const std::string& out, const Point2D& pt_virtual_2D, Color color, uint32_t size) {
+void DebugImp::DebugTextOut(const std::string& out, const Point2D& pt_virtual_2D,
+  const Color color,
+  const uint32_t size) {
     DebugText debug_text;
     debug_text.text = out;
     debug_text.has_coords = true;
@@ -1042,7 +1056,9 @@ void DebugImp::DebugTextOut(const std::string& out, const Point2D& pt_virtual_2D
     debug_text_.push_back(debug_text);
 }
 
-void DebugImp::DebugTextOut(const std::string& out, const Point3D& pt3D, Color color, uint32_t size) {
+void DebugImp::DebugTextOut(const std::string& out, const Point3D& pt3D,
+  const Color color,
+  const uint32_t size) {
     DebugText debug_text;
     debug_text.text = out;
     debug_text.has_coords = true;
@@ -1055,7 +1071,8 @@ void DebugImp::DebugTextOut(const std::string& out, const Point3D& pt3D, Color c
     debug_text_.push_back(debug_text);
 }
 
-void DebugImp::DebugLineOut(const Point3D& p0, const Point3D& p1, Color color) {
+void DebugImp::DebugLineOut(const Point3D& p0, const Point3D& p1,
+  const Color color) {
     DebugLine line;
     line.p0 = p0;
     line.p1 = p1;
@@ -1063,7 +1080,8 @@ void DebugImp::DebugLineOut(const Point3D& p0, const Point3D& p1, Color color) {
     debug_line_.push_back(line);
 }
 
-void DebugImp::DebugBoxOut(const Point3D& p_min, const Point3D& p_max, Color color) {
+void DebugImp::DebugBoxOut(const Point3D& p_min, const Point3D& p_max,
+  const Color color) {
     DebugBox box;
     box.p_min = p_min;
     box.p_max = p_max;
@@ -1075,7 +1093,7 @@ void DebugImp::DebugSphereOut(const Point3D& p, float r, Color color) {
     DebugSphere sphere;
     sphere.p_ = p;
     sphere.r_ = r;
-    sphere.color_ = color;
+    sphere.color = color;
     debug_sphere_.push_back(sphere);
 }
 
@@ -1224,9 +1242,7 @@ void DebugImp::SendDebug() {
             }
         }
         SC2APIProtocol::Color* color_text = debug_text->mutable_color();
-        color_text->set_r(entry.color.r);
-        color_text->set_g(entry.color.g);
-        color_text->set_b(entry.color.b);
+        entry.color.SetMutableColor(color_text);
     }
 
     for (const DebugLine& line : debug_line_) {
@@ -1245,9 +1261,7 @@ void DebugImp::SendDebug() {
         p1->set_z(line.p1.z);
 
         SC2APIProtocol::Color* color_line = debug_line->mutable_color();
-        color_line->set_r(line.color.r);
-        color_line->set_g(line.color.g);
-        color_line->set_b(line.color.b);
+        line.color.SetMutableColor(color_line);
     }
 
     for (const DebugBox& box : debug_box_) {
@@ -1265,9 +1279,7 @@ void DebugImp::SendDebug() {
         p_max->set_z(box.p_max.z);
 
         SC2APIProtocol::Color* color_box = debug_box->mutable_color();
-        color_box->set_r(box.color.r);
-        color_box->set_g(box.color.g);
-        color_box->set_b(box.color.b);
+        box.color.SetMutableColor(color_box);
     }
 
     for (const DebugSphere& sphere : debug_sphere_) {
@@ -1282,9 +1294,7 @@ void DebugImp::SendDebug() {
         debug_sphere->set_r(sphere.r_);
 
         SC2APIProtocol::Color* color_sphere = debug_sphere->mutable_color();
-        color_sphere->set_r(sphere.color_.r);
-        color_sphere->set_g(sphere.color_.g);
-        color_sphere->set_b(sphere.color_.b);
+        sphere.color.SetMutableColor(color_sphere);
     }
 
     for (const DebugSetUnitValue& set_unit_value : debug_unit_values_) {

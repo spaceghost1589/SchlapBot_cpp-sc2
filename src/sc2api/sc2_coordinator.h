@@ -147,7 +147,7 @@ public:
     //! \param map_path Path to the map to run.
     //! \return True if the game started, false if there was errors or the game didn't start, override OnError callback
     //! to see the exact errors.
-    bool StartGame(const std::string& map_path = std::string());
+    bool StartGame(const std::string& map_path = std::string() ) const;
 
     //! Creates a game but does not join the agents to the game
     //! \param map_path Path to the map to run.

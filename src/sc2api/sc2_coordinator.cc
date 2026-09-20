@@ -651,9 +651,11 @@ Coordinator::~Coordinator() {
     delete imp_;
 }
 
-bool Coordinator::StartGame(const std::string& map_path) {
-    if (!map_path.empty())
+auto Coordinator::StartGame(const std::string& map_path ) const -> bool {
+    if (!map_path.empty()) {
         imp_->game_settings_.map_name = map_path;
+}
+    std::cout << "Map: " << imp_->game_settings_.map_name << '\n';
     return imp_->StartGame();
 }
 

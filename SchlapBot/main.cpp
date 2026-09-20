@@ -2,76 +2,108 @@
 #include <iostream>
 
 #include "SchlapBot.h"
+#include "sc2api/sc2_common.cc"
 #include "sc2api/sc2_coordinator.h"
 #include "sc2api/sc2_gametypes.h"
 
 namespace {
 using namespace std;
-}  // namespace
+} // namespace
 
+static std::string GetRandomMap ( ) {
+    const int random_map = sc2::GetRandomInteger ( 1, 7 );
+
+    if ( random_map == 1 ) {
+        return "IncorporealAIE_v4.SC2Map";
+    }
+    if ( random_map == 2 ) {
+        return "LeyLinesAIE_v3.SC2Map";
+    }
+    if ( random_map == 3 ) {
+        return "MagannathaAIE_v2.SC2Map";
+    }
+    if ( random_map == 4 ) {
+        return "PersephoneAIE_v4.SC2Map";
+    }
+    if ( random_map == 5 ) {
+        return "PylonAIE_v4.SC2Map";
+    }
+    if ( random_map == 6 ) {
+        return "TorchesAIE_v4.SC2Map";
+    } // 7
+    return "UltraloveAIE_v2.SC2Map";
+}
 #ifdef BUILD_FOR_LADDER
-namespace {}  // namespace
+namespace {
+} // namespace
 
-int main(const int argc, char* const argv[]) {
+int main ( const int argc, char* const argv[] ) {
     Options options;
-    ParseArguments(argc, argv, &options);
+    ParseArguments ( argc, argv, &options );
 
     sc2::Coordinator coordinator;
-    Bot bot;
+    Bot              bot;
 
     size_t num_agents = 2;
-    coordinator.SetParticipants({CreateParticipant(sc2::Race::Random, &bot, "BlankBot")});
+    coordinator.SetParticipants (
+      { CreateParticipant ( sc2::Race::Random, &bot, "BlankBot" ) }
+    );
 
     std::cout << "Connecting to port " << options.GamePort << std::endl;
-    coordinator.Connect(options.GamePort);
-    coordinator.SetupPorts(num_agents, options.StartPort, false);
+    coordinator.Connect ( options.GamePort );
+    coordinator.SetupPorts ( num_agents, options.StartPort, false );
 
     // NB (alkurbatov): Increase speed of steps processing.
     // Disables ability to control your bot during game.
     // Recommended for competitions.
-    coordinator.SetRawAffectsSelection(true);
+    coordinator.SetRawAffectsSelection ( true );
 
-    coordinator.JoinGame();
-    coordinator.SetTimeoutMS(10000);
+    coordinator.JoinGame( );
+    coordinator.SetTimeoutMS ( 10'000 );
     std::cout << "Successfully joined game" << std::endl;
 
-    while (coordinator.Update()) {
-    }
+    while ( coordinator.Update( ) ) { }
 
     return 0;
-}  // main Ladder
+} // main Ladder
 
 #else
 
-int main(const int argc,
-         char* argv[])  // NOLINT(*-avoid-c-arrays, *-use-internal-linkage)
+int main (
+  const int argc,
+  char*     argv[]
+) // NOLINT(*-avoid-c-arrays, *-use-internal-linkage)
 {
     sc2::Coordinator coordinator;
-    coordinator.LoadSettings(argc, argv);
+    coordinator.LoadSettings ( argc, argv );
 
     // NOTE: Uncomment to start the game in full screen mode.
     // coordinator.SetFullScreen(true);
 
     // NOTE: Uncomment to play at normal speed.
-    coordinator.SetRealtime(true);
+    coordinator.SetRealtime ( true );
 
-    sc2::SchlapBot SchlapBot{};
+    sc2::SchlapBot SchlapBot { };
 
-    coordinator.SetParticipants({
-        CreateParticipant(sc2::Race::Terran, &SchlapBot, "SchlapBot"),
-        CreateComputer(sc2::Race::Random, sc2::Difficulty::Easy, sc2::AIBuild::Macro, "EasyMacro"),
-    });
+    coordinator.SetParticipants (
+      {
+          CreateParticipant ( sc2::Race::Terran, &SchlapBot, "SchlapBot" ),
+          CreateComputer (
+            sc2::Race::Random,
+            sc2::Difficulty::Easy,
+            sc2::AIBuild::Macro
+          ),
+      }
+    );
 
 
     // const MapData map_data("IncorporealAIE_v4");
 
-    coordinator.LaunchStarcraft();
-    // coordinator.StartGame("IncorporealAIE_v4.SC2Map");
-    coordinator.StartGame("IncorporealAIE_v4.SC2Map");
+    coordinator.LaunchStarcraft( );
 
-    while (coordinator.Update()) {
+    coordinator.StartGame ( GetRandomMap() );
 
-    }
+    while ( coordinator.Update( ) ) { }
 
     return 0;
 
@@ -100,5 +132,5 @@ int main(const int argc,
     // SRC_LocationOut(format("Realtime set: {}", realtime).c_str());
     //
 
-}  // Main (Local)
+} // Main (Local)
 #endif

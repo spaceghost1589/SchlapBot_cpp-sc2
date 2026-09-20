@@ -198,6 +198,18 @@ auto Dot2D(const Point2D& a, const Point2D& b) -> float {
     return (a.x * b.x) + (a.y * b.y);
 }
 
+auto Slope ( const Point2D& a, const Point2D& b ) -> float {
+    if ( a.x - b.x == 0 ) {
+        if ( a.y - b.y > 0 ) {
+            return kInfiniteSlope;
+        }
+        if ( a.y - b.y < 0 ) {
+            return -kInfiniteSlope;
+        }
+    }
+    return ( a.y - b.y ) / ( a.x - b.x );
+}
+
 auto Distance3D(const Point3D& a, const Point3D& b) -> float {
     const Point3D diff = a - b;
     return std::sqrt(Dot3D(diff, diff));
