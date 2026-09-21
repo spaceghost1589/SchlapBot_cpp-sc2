@@ -2,8 +2,10 @@
 
 #include <cassert>
 #include <cstring>
+#include <filesystem>
 #include <iostream>
 #include <string>
+#include <string_view>
 
 #ifdef _WIN32
 #include "dirent.h"
@@ -12,6 +14,14 @@
 #endif
 
 namespace sc2 {
+
+namespace {
+
+std::string JoinDirFile(const std::filesystem::path& directory_path, std::string_view name) {
+    return (directory_path / name).string();
+}
+
+}  // namespace
 
 int scan_directory(const char* directory_path, std::vector<std::string>& files, bool full_path, bool list_directories) {
     if (!directory_path || !*directory_path) {
@@ -36,8 +46,9 @@ int scan_directory(const char* directory_path, std::vector<std::string>& files, 
                 if (!full_path) {
                     files.push_back(ent->d_name);
                 } else {
-                    files.push_back(std::string(directory_path) + std::string(ent->d_name));
+                    files.push_back(JoinDirFile(directory_path, ent->d_name));
                 }
+                break;
             }
             case DT_DIR: {
                 if (!list_directories || !*ent->d_name) {
@@ -51,9 +62,10 @@ int scan_directory(const char* directory_path, std::vector<std::string>& files, 
                 if (!full_path) {
                     files.push_back(ent->d_name);
                 } else {
-                    files.push_back(std::string(directory_path) + std::string(ent->d_name));
+                    files.push_back(JoinDirFile(directory_path, ent->d_name));
                 }
-            } break;
+                break;
+            }
         }
     }
 
