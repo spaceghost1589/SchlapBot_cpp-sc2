@@ -1,6 +1,7 @@
 #pragma once
 
 #include <span>
+#include <span>
 #include <string>
 #include <string_view>
 #include <unordered_map>
