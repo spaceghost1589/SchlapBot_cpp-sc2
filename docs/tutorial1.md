@@ -22,9 +22,11 @@ simple, our bot will start by printing hello world to console when the game star
 only overwrite the OnGameStart event. Add the following code to tutorial.cc.
 
 ```C++
-#include <sc2api/sc2_api.h>
-
+#include <cstddef>
 #include <iostream>
+#include <span>
+
+#include "sc2api/sc2_api.h"
 
 using namespace sc2;
 
@@ -58,9 +60,11 @@ to the Starcraft executable.
 Replace the `main` function with the following code:
 
 ```C++
-int main(int argc, char* argv[]) {
+auto main(const int argc, const char* argv[]) -> int {
+    const std::span args{argv, static_cast<size_t>(argc)};
+    
     Coordinator coordinator;
-    coordinator.LoadSettings(argc, argv);
+    coordinator.LoadSettings(args);
 
     Bot bot;
     coordinator.SetParticipants({
@@ -129,9 +133,11 @@ Full Source Code
 ----------------
 
 ```C++
-#include <sc2api/sc2_api.h>
-
+#include <cstddef>
 #include <iostream>
+#include <span>
+
+#include "sc2api/sc2_api.h"
 
 using namespace sc2;
 
@@ -146,9 +152,11 @@ public:
     }
 };
 
-int main(int argc, char* argv[]) {
+int main(const int argc, const char* argv[]) {
+    std::span<char* const> args{argv, static_cast<size_t>(argc)};;
+    
     Coordinator coordinator;
-    coordinator.LoadSettings(argc, argv);
+    coordinator.LoadSettings(args);
 
     Bot bot;
     coordinator.SetParticipants({

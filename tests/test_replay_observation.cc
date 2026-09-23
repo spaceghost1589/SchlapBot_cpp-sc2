@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <iostream>
+#include <span>
 #include <sstream>
 #include <string>
 #include <string_view>
@@ -142,7 +143,7 @@ private:
 
 }  // namespace
 
-bool TestReplayObservation(int argc, char** argv) {
+bool TestReplayObservation(std::span<const char*> args) {
     const std::filesystem::path replay_dir = std::filesystem::path(GetLibraryMapsDirectory()) / "ReplayFixtures";
     std::error_code ec;
     std::filesystem::create_directories(replay_dir, ec);
@@ -151,7 +152,7 @@ bool TestReplayObservation(int argc, char** argv) {
 
     {
         Coordinator coordinator;
-        if (!coordinator.LoadSettings(argc, argv)) {
+        if (!coordinator.LoadSettings(args)) {
             std::cerr << "TestReplayObservation: LoadSettings failed\n";
             return false;
         }
@@ -186,7 +187,7 @@ bool TestReplayObservation(int argc, char** argv) {
 
     std::ostringstream errors;
     Coordinator replay_coordinator;
-    if (!replay_coordinator.LoadSettings(argc, argv)) {
+    if (!replay_coordinator.LoadSettings(args)) {
         std::cerr << "TestReplayObservation: replay LoadSettings failed\n";
         return false;
     }

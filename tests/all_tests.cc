@@ -1,4 +1,6 @@
+#include <cstddef>
 #include <iostream>
+#include <span>
 #include <string>
 
 #include "sc2utils/sc2_manage_process.h"
@@ -18,12 +20,12 @@
 
 // Tests. Easier to extern than create a .h for a single function prototype.
 namespace sc2 {
-bool TestAbilityRemap(int argc, char** argv);
+bool TestAbilityRemap(std::span<const char*> args);
 }
 
 #define TEST(X)                                                    \
     std::cout << "Running test: " << #X << std::endl;              \
-    if (X(argc, argv)) {                                           \
+    if (X(args)) {                                           \
         std::cout << "Test: " << #X << " succeeded." << std::endl; \
     } else {                                                       \
         success = false;                                           \
@@ -31,7 +33,8 @@ bool TestAbilityRemap(int argc, char** argv);
     }
 
 //*************************************************************************************************
-int main(int argc, char* argv[]) {
+auto main(const int argc, const char* argv[]) -> int {
+    const std::span args{argv, static_cast<size_t>(argc)};
     bool success = true;
 
     // Add tests here.

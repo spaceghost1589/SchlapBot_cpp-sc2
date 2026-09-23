@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <span>
 #include <string>
 
 #include "sc2api/sc2_api.h"
@@ -1833,9 +1834,9 @@ void UnitCommandTestBot::OnTestsEnd() {
 // TestUnitCommand
 //
 
-bool TestUnitCommand(int argc, char** argv) {
+bool TestUnitCommand(std::span<const char*> args) {
     Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
 

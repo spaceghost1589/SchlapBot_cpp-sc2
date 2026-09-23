@@ -1,4 +1,5 @@
 #pragma once
+#include <span>
 
 #include "sc2api/sc2_agent.h"
 #include "sc2api/sc2_coordinator.h"
@@ -6,6 +7,6 @@
 
 namespace sc2 {
 
-bool TestFastRestartSinglePlayer(int argc, char** argv);
+bool TestFastRestartSinglePlayer(std::span<const char*> args);
 
 }

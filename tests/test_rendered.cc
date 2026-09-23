@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <span>
 
 #include "sc2api/sc2_api.h"
 #include "test_framework.h"
@@ -100,9 +101,9 @@ void RenderedTestBot::OnTestsEnd() {
 // TestRendered
 //
 
-bool TestRendered(int argc, char** argv) {
+bool TestRendered(std::span<const char*> args) {
     Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
 

@@ -1,7 +1,8 @@
 #pragma once
+#include <span>
 
 namespace sc2 {
 
-bool TestReplayObservation(int argc, char** argv);
+bool TestReplayObservation(std::span<const char*> args);
 
 }  // namespace sc2

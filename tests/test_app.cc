@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <span>
 #include <string>
 
 #include "feature_layers_shared.h"
@@ -81,9 +82,9 @@ public:
     }
 };
 
-bool TestHang(int argc, char** argv) {
+bool TestHang(const std::span<const char*> args) {
     Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
 
@@ -106,9 +107,9 @@ bool TestHang(int argc, char** argv) {
     return bot1.reported_hang_;
 }
 
-bool TestCrash(int argc, char** argv) {
+bool TestCrash(const std::span<const char*> args) {
     Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
 
@@ -135,10 +136,10 @@ bool TestCrash(int argc, char** argv) {
 // TestFeatureLayers
 //
 
-bool TestApp(int argc, char** argv) {
-    if (!TestCrash(argc, argv))
+bool TestApp(const std::span<const char*> args) {
+    if (!TestCrash(args))
         return false;
-    if (!TestHang(argc, argv))
+    if (!TestHang(args))
         return false;
 
     return true;

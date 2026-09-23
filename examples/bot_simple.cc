@@ -1,4 +1,6 @@
+#include <cstddef>
 #include <iostream>
+#include <span>
 
 #include "sc2api/sc2_api.h"
 #include "sc2lib/sc2_lib.h"
@@ -36,9 +38,11 @@ private:
 };
 
 //*************************************************************************************************
-int main(int argc, char* argv[]) {
+auto main(const int argc, const char* argv[]) -> int {
+    const std::span args{argv, static_cast<size_t>(argc)};
+
     sc2::Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return 1;
     }
 

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <span>
 #include <string>
 
 #include "feature_layers_shared.h"
@@ -336,9 +337,9 @@ void FeatureLayerTestBot::OnTestsEnd() {
 // TestFeatureLayers
 //
 
-bool TestFeatureLayers(int argc, char** argv, const std::string& map, const sc2::FeatureLayerSettings& settings) {
+bool TestFeatureLayers(const std::span<const char*> args, const std::string& map, const sc2::FeatureLayerSettings& settings) {
     Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
 
@@ -363,24 +364,24 @@ bool TestFeatureLayers(int argc, char** argv, const std::string& map, const sc2:
     return bot.Success();
 }
 
-bool TestFeatureLayers(int argc, char** argv) {
+bool TestFeatureLayers(const std::span<const char*> args) {
     bool success = true;
 
     sc2::FeatureLayerSettings sizeSquare(24.0f, 80, 80, 80, 80);
     sc2::FeatureLayerSettings sizeLong(24.0f, 80, 60, 80, 60);
     sc2::FeatureLayerSettings sizeTall(24.0f, 60, 80, 60, 80);
 
-    success = TestFeatureLayers(argc, argv, sc2::kMapEmpty, sizeSquare) && success;
-    success = TestFeatureLayers(argc, argv, sc2::kMapEmpty, sizeLong) && success;
-    success = TestFeatureLayers(argc, argv, sc2::kMapEmpty, sizeTall) && success;
+    success = TestFeatureLayers(args, sc2::kMapEmpty, sizeSquare) && success;
+    success = TestFeatureLayers(args, sc2::kMapEmpty, sizeLong) && success;
+    success = TestFeatureLayers(args, sc2::kMapEmpty, sizeTall) && success;
 
-    success = TestFeatureLayers(argc, argv, sc2::kMapEmptyLong, sizeSquare) && success;
-    success = TestFeatureLayers(argc, argv, sc2::kMapEmptyLong, sizeLong) && success;
-    success = TestFeatureLayers(argc, argv, sc2::kMapEmptyLong, sizeTall) && success;
+    success = TestFeatureLayers(args, sc2::kMapEmptyLong, sizeSquare) && success;
+    success = TestFeatureLayers(args, sc2::kMapEmptyLong, sizeLong) && success;
+    success = TestFeatureLayers(args, sc2::kMapEmptyLong, sizeTall) && success;
 
-    success = TestFeatureLayers(argc, argv, sc2::kMapEmptyTall, sizeSquare) && success;
-    success = TestFeatureLayers(argc, argv, sc2::kMapEmptyTall, sizeLong) && success;
-    success = TestFeatureLayers(argc, argv, sc2::kMapEmptyTall, sizeTall) && success;
+    success = TestFeatureLayers(args, sc2::kMapEmptyTall, sizeSquare) && success;
+    success = TestFeatureLayers(args, sc2::kMapEmptyTall, sizeLong) && success;
+    success = TestFeatureLayers(args, sc2::kMapEmptyTall, sizeTall) && success;
 
     return success;
 }
