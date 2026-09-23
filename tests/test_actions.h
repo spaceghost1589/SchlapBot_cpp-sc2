@@ -1,7 +1,9 @@
 #pragma once
 
+#include <span>
+
 namespace sc2 {
 
-bool TestObservationActions(int argc, char** argv);
+bool TestObservationActions(std::span<const char*> args);
 
 }

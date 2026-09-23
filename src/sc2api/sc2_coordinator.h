@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <span>
 #include <string>
 #include <vector>
 
@@ -32,11 +33,13 @@ public:
     //!     1. If command line arguments are provided it will use them. Invoke binary with --help to see expected
     //!     arguments.
     //!     2. (Recommended) If the StarCraft II binary has been run the function will auto discover its location.
-    //! \param argc Provided in main signature.
-    //! \param argv Provided in main signature.
+    //! @attention Adjust main()'s parameters and the first line after to the following:\n\n
+    //! @code auto main(const int argc, const char* argv[]) -> int {@endcode \n\n
+    //! @code const std::span args{argv, static_cast<size_t>(argc)};@endcode
+    //! \param args Provided in main signature.
     //! \param game_settings The name of the settings file.
     //! \return True if settings were found or discovered, false otherwise.
-    bool LoadSettings(int argc, char** argv);
+    auto LoadSettings(std::span<const char*> args) -> bool;
 
     //! Specifies whether bots or replays OnStep function should be run in parallel. If set to true make sure your bots
     //! are thread-safe if they reach into shared code. \param value True to multithread, false otherwise.

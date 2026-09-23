@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <span>
 #include <string>
 
 #include "feature_layers_shared.h"
@@ -163,9 +164,9 @@ void FeatureLayerMPTestBot::OnTestsEnd() {
 // TestFeatureLayersMP
 //
 
-bool TestFeatureLayersMP(int argc, char** argv) {
+bool TestFeatureLayersMP(const std::span<const char*> args) {
     Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
 

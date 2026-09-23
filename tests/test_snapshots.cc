@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <span>
 #include <string>
 
 #include "feature_layers_shared.h"
@@ -243,9 +244,10 @@ SnapshotTestBot::SnapshotTestBot() : mineral_(nullptr) {
 // TestFeatureLayers
 //
 
-bool TestSnapshots(int argc, char** argv) {
+bool TestSnapshots(const std::span<const char*> args)
+{
     Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
     coordinator.SetFeatureLayers(FeatureLayerSettings());

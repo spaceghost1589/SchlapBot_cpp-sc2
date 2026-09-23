@@ -1,135 +1,134 @@
 #include "sc2_arg_parser.h"
 
-#include <cstring>
+#include <algorithm>
+#include <cstddef>
 #include <iostream>
+#include <span>
+#include <string>
+#include <string_view>
+#include <vector>
 
-namespace sc2 {
+namespace sc2
+{
 
-ArgParser::ArgParser(const std::string& executable_name) : executable_name_(executable_name) {
+ArgParser::ArgParser(const std::string_view& executable_name) : executable_name_(executable_name)
+{
 }
 
-ArgParser::ArgParser(const std::string& usage, const std::string& description, const std::string& example)
-    : usage_(usage), description_(description), example_(example) {
+ArgParser::ArgParser(const std::string_view& usage, const std::string_view& description,
+                     const std::string_view& example)
+    : usage_(usage), description_(description), example_(example)
+{
 }
 
-void ArgParser::AddOptions(const std::vector<Arg>& options) {
+auto ArgParser::AddOptions(const std::vector<Arg>& options) -> void
+{
     for (const auto& o : options) {
         options_.push_back(o);
         abbv_to_full_[o.abbreviation_] = o.fullname_;
     }
 }
 
-bool ArgParser::Parse(int argc, char* argv[]) {
-    executable_name_ = argv[0];
+auto ArgParser::Parse(std::span<const char*> args) -> bool
+{
+    // Prevents mass NOLINT comments from C-style array access.
+    const std::vector<std::string_view> arguments(args.begin(), args.end());
 
-    for (int i = 0; i < argc; ++i) {
+    // If help is sent print out help and return false, don't parse.
+    if (std::ranges::any_of(arguments, [&](const std::string_view arg) -> bool {
+            return arg == "-h" || arg == "--help";
+        })) {
+        PrintHelp();
+        return false;
+    }
+
+    executable_name_ = arguments.front();
+
+    for (std::size_t i = 0; i < arguments.size(); ++i) {
+        const std::string_view arg_i = arguments.at(i);
+
         // Skip values.
-        if (argv[i][0] != '-') {
+        if (arg_i.front() != '-') {
             continue;
         }
 
-        // If help is sent print out help and return false, don't parse.
-        if (strcmp(argv[i], "--help") == 0) {
-            PrintHelp();
-            return false;
-        }
-
         // Check that it's a valid option.
-        bool valid_option = false;
-        for (const auto& o : options_) {
-            if (o.abbreviation_ == argv[i] || o.fullname_ == argv[i]) {
-                valid_option = true;
-                break;
-            }
-        }
-
-        if (!valid_option) {
-            std::cout << argv[i] << " is an unrecognized argument." << std::endl;
+        if (std::ranges::none_of(options_, [&](const Arg& opt) -> bool {
+                return opt.abbreviation_ == arg_i || opt.fullname_ == arg_i;
+            })) {
+            std::cerr << arg_i << " is an unrecognized argument." << '\n';
             return false;
         }
 
-        // Determine if the arg is a fullname or abbrevation.
-        std::string fullname = argv[i];
-        // Get the fullname if it's an abbreviation.
-        if (fullname[1] != '-') {
+        // Determine if `arg_i` is a fullname or an abbreviation.
+        std::string_view fullname = arg_i;
+        // If it's an abbreviation, get the fullname.
+        if (fullname.at(1) != '-') {
             fullname = abbv_to_full_[fullname];
         }
 
-        std::string value;
-        if (i < argc - 1) {
-            if (argv[i + 1][0] != '-') {
-                value = argv[i + 1];
+        std::string_view value;
+        if (i + 1 < arguments.size()) {
+            if (const std::string_view next_arg = arguments.at(i + 1); !next_arg.empty() && next_arg.front() != '-') {
+                value = next_arg;
             }
         }
 
         // Remove the dashes.
-        fullname.erase(0, 2);
-        full_to_value_[fullname] = value;
+        full_to_value_[fullname.substr(2)] = value;
     }
 
-    // Iterate the options and verify we have all necessary arguments.
-    for (const auto& o : options_) {
-        if (o.required_) {
-            std::string fullname = o.fullname_;
-            fullname.erase(0, 2);
-            auto it = full_to_value_.find(fullname);
-            if (it == full_to_value_.end()) {
-                // This argument can be supplied in multiple ways.
-                return false;
-            }
-        }
-    }
-
-    return true;
+    // Verify we have all required options.
+    return std::ranges::all_of(options_, [&](const Arg& opt) -> bool {
+        return !opt.required_ || full_to_value_.contains(opt.fullname_.substr(2));
+    });
 }
 
-bool ArgParser::Get(const std::string& identifier, std::string& value) {
-    std::string fullname = identifier;
-    // If the identifier is the abbrevation turn it into the fullname
-    if (fullname.size() == 1) {
-        auto it = abbv_to_full_.find(std::string("-") + identifier);
+auto ArgParser::Get(const std::string_view& identifier, std::string& value) -> bool
+{
+    std::string_view fullname = identifier;
 
-        if (it == abbv_to_full_.end()) {
+    // If the identifier is the abbreviation turn it into the fullname
+    if (fullname.size() == 1) {
+        if (const auto it = abbv_to_full_.find('-' + std::string(identifier)); it != abbv_to_full_.end()) {
+            fullname = it->second;
+        } else {
             return false;
         }
-
-        fullname = it->second;
     }
 
-    if (fullname[0] == '-') {
-        fullname.erase(0, 2);
+    if (fullname.front() == '-') {
+        fullname = fullname.substr(2);
     }
 
-    auto it = full_to_value_.find(fullname);
-
-    if (it == full_to_value_.end()) {
+    if (const auto it = full_to_value_.find(fullname); it != full_to_value_.end()) {
+        value = it->second;
+    } else {
         return false;
     }
 
-    value = it->second;
-
     return true;
 }
 
-void ArgParser::PrintHelp() {
+auto ArgParser::PrintHelp() const -> void
+{
     PrintUsage();
-    std::cout << "Options -" << std::endl;
+    std::cout << "Options -" << '\n';
     for (const auto& o : options_) {
-        std::cout << "  " << o.abbreviation_ << ", " << o.fullname_ << " " << o.description_ << std::endl;
+        std::cout << "  " << o.abbreviation_ << ", " << o.fullname_ << " " << o.description_ << '\n';
     }
 }
 
-void ArgParser::PrintUsage() {
+auto ArgParser::PrintUsage() const -> void
+{
     std::cout << "Usage: " << executable_name_ << " ";
     // Append required arguments.
     for (const auto& o : options_) {
         if (o.required_) {
-            std::string fullname = o.fullname_;
-            fullname.erase(0, 2);
-            std::cout << o.abbreviation_ << " [" << fullname << "] ";
+            std::cout << o.abbreviation_ << " [" << o.fullname_.substr(2) << "] ";
         }
     }
-    std::cout << std::endl << std::endl;
+    std::cout << "\n\n";
 }
 
-}  // namespace sc2
+} // namespace sc2

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <random>
+#include <span>
 #include <string>
 
 #include "sc2api/sc2_api.h"
@@ -110,9 +111,9 @@ void MovmentAndCombatTestBot::OnTestsEnd() {
 // TestMovementCombat
 //
 
-bool TestMovementCombat(int argc, char** argv) {
+bool TestMovementCombat(const std::span<const char*> args) {
     Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
 

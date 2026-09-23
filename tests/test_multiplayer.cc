@@ -1,6 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <random>
+#include <span>
 #include <string>
 
 #include "sc2api/sc2_api.h"
@@ -55,11 +56,12 @@ bool RemoteSaveMap(sc2::Coordinator& coordinator, std::string source_map, std::s
 // TestMovementCombat
 //
 
-bool TestMultiplayer(int argc, char** argv) {
+bool TestMultiplayer(const std::span<const char*> args)
+{
     static const char* remote_path = "temp_foo.SC2Map";
 
     sc2::Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
 

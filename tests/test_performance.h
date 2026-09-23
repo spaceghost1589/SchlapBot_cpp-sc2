@@ -1,7 +1,8 @@
 #pragma once
+#include <span>
 
 namespace sc2 {
 
-bool TestPerformance(int argc, char** argv);
+bool TestPerformance(std::span<const char*> args);
 
 }

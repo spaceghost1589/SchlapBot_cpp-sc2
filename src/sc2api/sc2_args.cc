@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstdlib>
 #include <iostream>
+#include <span>
 
 #include "sc2utils/sc2_arg_parser.h"
 #include "sc2utils/sc2_manage_process.h"
@@ -60,9 +61,10 @@ std::string ParseExecuteInfo(ProcessSettings& process_settings, GameSettings& ga
     return {};
 }
 
-bool ParseSettings(int argc, char* argv[], ProcessSettings& process_settings, GameSettings& game_settings) {
-    assert(argc);
-    ArgParser arg_parser(argv[0]);
+auto ParseSettings(const std::span<const char*> args, ProcessSettings& process_settings, GameSettings& game_settings)
+    -> bool {
+    assert(args.empty());
+    ArgParser arg_parser(args.front());
 
     // NB (alkurbatov): First attempt to parse from the SC2 user directory.
     // Note that ExecuteInfo.txt may be missing on Linux and command line
@@ -82,7 +84,7 @@ bool ParseSettings(int argc, char* argv[], ProcessSettings& process_settings, Ga
         process_settings.process_path = sc2path;
     }
 
-    if (!arg_parser.Parse(argc, argv)) {
+    if (!arg_parser.Parse(args)) {
         return false;
     }
 
@@ -95,7 +97,7 @@ bool ParseSettings(int argc, char* argv[], ProcessSettings& process_settings, Ga
         }
 
         std::cerr << "Please run StarCraft II before running this application or provide command line arguments.\n";
-        std::cerr << "For more options: " << argv[0] << " --help\n\n";
+        std::cerr << "For more options: " << args.front() << " --help\n\n";
 
         return false;
     }

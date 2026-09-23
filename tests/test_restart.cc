@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <span>
 #include <string>
 
 #include "sc2api/sc2_api.h"
@@ -82,9 +83,9 @@ public:
 // TestMovementCombat
 //
 
-bool TestFastRestartSinglePlayer(int argc, char** argv) {
+bool TestFastRestartSinglePlayer(const std::span<const char*> args) {
     Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
 

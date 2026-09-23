@@ -1,5 +1,6 @@
 #include <iostream>
 #include <random>
+#include <span>
 #include <string>
 
 #include "feature_layers_shared.h"
@@ -200,9 +201,9 @@ void RemapAbilitiesTestBot::OnTestsEnd() {
 // TestFeatureLayers
 //
 
-bool TestAbilityRemap(int argc, char** argv) {
+bool TestAbilityRemap(const std::span<const char*> args) {
     Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
 

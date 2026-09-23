@@ -4,6 +4,7 @@
 #include <ctime>
 #include <iomanip>
 #include <iostream>
+#include <span>
 
 #include "bot_examples.h"
 #include "sc2api/sc2_api.h"
@@ -213,9 +214,9 @@ void PerformanceTests::OnTestsEnd() {
     std::cout << std::endl << std::endl;
 }
 
-void TestPerformance(int argc, char** argv, int feature_layer_width, int feature_layer_height) {
+void TestPerformance(const std::span<const char*> args, int feature_layer_width, int feature_layer_height) {
     sc2::Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return;
     }
 
@@ -242,11 +243,11 @@ void TestPerformance(int argc, char** argv, int feature_layer_width, int feature
     }
 }
 
-bool TestPerformance(int argc, char** argv) {
-    TestPerformance(argc, argv, 32, 32);
-    TestPerformance(argc, argv, 64, 64);
-    TestPerformance(argc, argv, 128, 128);
-    TestPerformance(argc, argv, 256, 256);
+auto TestPerformance(const std::span<const char*> args) -> bool {
+    TestPerformance(args, 32, 32);
+    TestPerformance(args, 64, 64);
+    TestPerformance(args, 128, 128);
+    TestPerformance(args, 256, 256);
     return true;
 }
 

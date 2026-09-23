@@ -4,6 +4,7 @@
 #include <cassert>
 #include <fstream>
 #include <iostream>
+#include <span>
 #include <thread>
 
 #include "s2clientprotocol/sc2api.pb.h"
@@ -697,8 +698,8 @@ void Coordinator::SetReplayRecovery(bool value) {
     imp_->replay_recovery_ = value;
 }
 
-bool Coordinator::LoadSettings(int argc, char** argv) {
-    return ParseSettings(argc, argv, imp_->process_settings_, imp_->game_settings_);
+bool Coordinator::LoadSettings(const std::span<const char*> args) {
+    return ParseSettings(args, imp_->process_settings_, imp_->game_settings_);
 }
 
 void Coordinator::LaunchStarcraft() {

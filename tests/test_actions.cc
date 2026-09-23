@@ -1,4 +1,5 @@
 #include <iostream>
+#include <span>
 
 #include "feature_layers_shared.h"
 #include "sc2api/sc2_api.h"
@@ -101,9 +102,9 @@ void ActionTestBot::OnTestsEnd() {
 // TestObservationActions
 //
 
-bool TestObservationActions(int argc, char** argv) {
+bool TestObservationActions(const std::span<const char*> args) {
     Coordinator coordinator;
-    if (!coordinator.LoadSettings(argc, argv)) {
+    if (!coordinator.LoadSettings(args)) {
         return false;
     }
 

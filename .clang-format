@@ -1,9 +1,44 @@
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html
 ---
 Language: Cpp
 BasedOnStyle: Google
-AccessModifierOffset: -4
-AllowShortFunctionsOnASingleLine: None
-AllowShortIfStatementsOnASingleLine: Never
-AllowShortLoopsOnASingleLine: false
+BreakBeforeBraces: Linux
 ColumnLimit: 120
 IndentWidth: 4
+AccessModifierOffset: -4
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: Empty
+AllowShortLoopsOnASingleLine: false
+DerivePointerAlignment: false
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex: '^<.*\.h>$' # C system headers
+    Priority: 1
+    SortPriority: 1
+  - Regex: '^<[^/.]+>$' # C++ standard library headers
+    Priority: 2
+    SortPriority: 2
+  - Regex: '^<(s2clientprotocol)/.pb.h>$' # s2clientprotocol library files.
+    Priority: 3
+    SortPriority: 3
+  - Regex: '^".h"' # Project files.
+    Priority: 4
+    SortPriority: 4
+IndentCaseLabels: false
+InsertNewlineAtEOF: true
+LineEnding: LF
+PointerAlignment: Left
+QualifierAlignment: Custom
+QualifierOrder: [ friend, static, inline, constexpr, const, volatile, restrict, type ]
+SpacesBeforeTrailingComments: 1
+Standard: Latest
+---
+Language: Proto
+DisableFormat: true
+---
+Language: Json
+BasedOnStyle: Google
+ColumnLimit: 120
+IndentWidth: 2
