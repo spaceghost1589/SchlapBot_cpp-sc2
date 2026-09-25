@@ -21,7 +21,7 @@ project(cpp-sc2)
 include(FetchContent)
 set(FETCHCONTENT_QUIET FALSE)
 
-option(BUILD_SC2_RENDERER "Build SC2 Renderer library" OFF)
+option(BUILD_SC2_RENDERER "Build SC2 Renderer library" ON)
 option(BUILD_API_EXAMPLES "Build Examples" ON)
 option(BUILD_API_TESTS "Build Tests" ON)
 
@@ -55,12 +55,8 @@ list(APPEND CMAKE_MODULE_PATH
     "${PROJECT_SOURCE_DIR}/thirdparty/civetweb"
     "${PROJECT_SOURCE_DIR}/cmake/assets")
 
-if(MSVC)
-    set(CMAKE_CXX_STANDARD 23)
-    add_compile_options(/std:c++latest)
-else()
-    set(CMAKE_CXX_STANDARD 26)
-endif()
+# Build with c++20 support.
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Allow creating filters for projects in visual studio.
@@ -98,3 +94,13 @@ endif ()
 add_subdirectory(src)
 
 add_subdirectory(SchlapBot)
+
+if (CMAKE_EXPORT_COMPILE_COMMANDS)
+    add_custom_target(link_compile_commands ALL
+        COMMAND ${CMAKE_COMMAND} -E create_hardlink
+        ${CMAKE_BINARY_DIR}/compile_commands.json
+        ${CMAKE_SOURCE_DIR}/compile_commands.json
+        DEPENDS ${CMAKE_BINARY_DIR}/compile_commands.json
+        COMMENT "Linking compile_commands.json to source root"
+    )
+endif ()
