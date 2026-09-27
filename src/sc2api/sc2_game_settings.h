@@ -108,11 +108,11 @@ struct ReplaySettings {
 };
 
 //! Game status.
-enum class AppState {
-    normal,          // The game application has behaved normally.
-    timeout,         // A timeout has occurred, and the game application was terminated.
-    timeout_zombie,  // A timeout has occurred, but the game application could not be terminated.
-    crashed          // A crash has been detected.
+enum class AppState : uint_fast8_t {
+    Normal,         // The game application has behaved normally.
+    Timeout,        // A timeout has occurred, and the game application was terminated.
+    TimeoutZombie,  // A timeout has occurred, but the game application could not be terminated.
+    Crashed,        // A crash has been detected.
 };
 
 //! Known maps.

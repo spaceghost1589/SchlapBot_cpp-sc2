@@ -1,5 +1,4 @@
 diff --git a/README.md b/README.md
-index d15c9b0..902beec 100644
 --- a/README.md
 +++ b/README.md
 @@ -22,7 +22,7 @@ The API is available in the retail Windows and Mac clients. There are also Linux
@@ -11,15 +10,6 @@ index d15c9b0..902beec 100644
      * [Documentation](docs/linux.md)
      * [Download](#downloads)
  * **Maps**
-@@ -60,7 +60,7 @@ To access the linux packages, map packs and replay packs, you must agree to the
- 
- The files are password protected with the password 'iagreetotheeula'.
- 
--**By typing in the password ‘iagreetotheeula’ you agree to be bound by the terms of the [AI and Machine Learning License](http://blzdistsc2-a.akamaihd.net/AI_AND_MACHINE_LEARNING_LICENSE.html)**
-+**By typing in the password 'iagreetotheeula' you agree to be bound by the terms of the [AI and Machine Learning License](http://blzdistsc2-a.akamaihd.net/AI_AND_MACHINE_LEARNING_LICENSE.html)**
- 
- ## Linux Packages
- 
 @@ -116,7 +116,7 @@ The default installation directories are:
  
  On Linux, the installation directory is the folder you extracted the linux package into.
@@ -29,16 +19,17 @@ index d15c9b0..902beec 100644
  
  Standard folder layout:
  * StarCraft II/
-@@ -138,6 +138,6 @@ Standard folder layout:
+@@ -136,8 +136,4 @@ Standard folder layout:
  
- These define the action mappings from ability ids in the protobuf api to the internals of the game.
- They also define some general ids that combine multiple abilities that have a similar semantic meaning
+ ## Stable IDs
+ 
+-These define the action mappings from ability ids in the protobuf api to the internals of the game.
+-They also define some general ids that combine multiple abilities that have a similar semantic meaning
 -(eg various forms of burrow, cancel, lift/land, etc). The `stableid.json` is updated occasionally with
-+(e.g. various forms of burrow, cancel, lift/land, etc.). The `stableid.json` is updated occasionally with
- the game, but can also be updated manually by downloading the `stableid.json` from here and placing it
- in the root of your `StarCraft II` directory.
+-the game, but can also be updated manually by downloading the `stableid.json` from here and placing it
+-in the root of your `StarCraft II` directory.
++They also define some general ids that combine multiple abilities that have a similar semantic meaning (e.g. various forms of burrow, cancel, lift/land, etc.). The `stableid.json` is updated occasionally with the game, but can also be updated manually by downloading the `stableid.json` from here and placing it in the root of your `StarCraft II` directory.
 diff --git a/buildinfo/README.md b/buildinfo/README.md
-index 95a6f04..75cb782 100644
 --- a/buildinfo/README.md
 +++ b/buildinfo/README.md
 @@ -1,4 +1,4 @@
@@ -48,7 +39,6 @@ index 95a6f04..75cb782 100644
  The data-hash is required to start the game manually without using the .build.info file.
  
 diff --git a/docs/linux.md b/docs/linux.md
-index 470d63e..d53e2d5 100644
 --- a/docs/linux.md
 +++ b/docs/linux.md
 @@ -24,7 +24,7 @@ Optional:
@@ -75,27 +65,8 @@ index 470d63e..d53e2d5 100644
  
  The same issue occurs for if you want to play on these ladder maps.
 diff --git a/docs/protocol.md b/docs/protocol.md
-index 36c4a37..91a9730 100644
 --- a/docs/protocol.md
 +++ b/docs/protocol.md
-@@ -14,7 +14,7 @@ The protocol for the connection is defined in protobuf. [The protocol definition
- 
- All communication over the connection is based around **Request** and **Response** messages. Requests are used for controlling the state of the application, retrieving data and controlling gameplay. 
- 
--The data sent into the game must be exactly a series of protobuf defined “Request” objects. The data sent back from the game will be exactly a series of protobuf defined “Response” objects, whose type exactly matches the order of incoming “Request” objects.
-+The data sent into the game must be exactly a series of protobuf defined "Request" objects. The data sent back from the game will be exactly a series of protobuf defined "Response" objects, whose type exactly matches the order of incoming "Request" objects.
- 
- You are allowed to send additional requests before receiving a response to an earlier request. Requests will be queued and processed in received order. Keeping the request queue saturated is best for optimal performance.
- 
-@@ -46,7 +46,7 @@ There are two supported options for controlling the game speed:
-     * There is no restriction on how fast or slow you can step.
- * **Realtime Mode**
-     * The game simulation will automatically advance.
--    * Uses the “faster” game speed (22.4 gameloops per second).
-+    * Uses the "faster" game speed (22.4 gameloops per second).
- 
- When in realtime mode, the Step transition in the above diagram will occur automatically.
- 
 @@ -64,7 +64,7 @@ When in realtime mode, the Step transition in the above diagram will occur autom
      5. Repeat
  4. Send **RequestQuit** to shut down application.
@@ -119,7 +90,7 @@ index 36c4a37..91a9730 100644
      * Designed for measuring performance of a bot and replay analysis.
  
 -Which interfaces are active is set using the “InterfaceOptions” message when you configure a game/replay. You are allowed to have multiple interfaces active at the same time. 
-+Which interfaces are active is set using the "InterfaceOptions" message when you configure a game/replay. You are allowed to have multiple interfaces active at the same time.
++Which interfaces are active is set using the “InterfaceOptions” message when you configure a game/replay. You are allowed to have multiple interfaces active at the same time.
  
  Observations will contain the same game state represented in each of the enabled interfaces.
  
@@ -142,24 +113,14 @@ index 36c4a37..91a9730 100644
  
  This interface is fully supported on all platforms including Linux. On Linux it supports both hardware and software rendering.
  
-@@ -175,15 +175,15 @@ There are two main types of errors in the protocol:
- * Protocol usage errors.
- * Errors processing a request.
+@@ -177,7 +177,7 @@ There are two main types of errors in the protocol:
  
--Which requests are allowed at any given time depends on the current status. For example, you are not allowed to send **RequestSaveReplay** if the current status is Launched as it isn’t in a game. When this occurs, the game will send back an empty Response message with only the error field populated.
-+Which requests are allowed at any given time depends on the current status. For example, you are not allowed to send **RequestSaveReplay** if the current status is Launched as it isn't in a game. When this occurs, the game will send back an empty Response message with only the error field populated.
+ Which requests are allowed at any given time depends on the current status. For example, you are not allowed to send **RequestSaveReplay** if the current status is Launched as it isn’t in a game. When this occurs, the game will send back an empty Response message with only the error field populated.
  
 -Many requests have errors that are specific to that type of request. For example, if you send **RequestCreateGame** with a map path that doesn’t exist. When this type of error occurs, the game will send back a Response message with the appropriate response type populated (eg. **ResponseCreateGame**), but with only the error field populated.
-+Many requests have errors that are specific to that type of request. For example, if you send **RequestCreateGame** with a map path that doesn't exist. When this type of error occurs, the game will send back a Response message with the appropriate response type populated (e.g. **ResponseCreateGame**), but with only the error field populated.
++Many requests have errors that are specific to that type of request. For example, if you send **RequestCreateGame** with a map path that doesn’t exist. When this type of error occurs, the game will send back a Response message with the appropriate response type populated (e.g. **ResponseCreateGame**), but with only the error field populated.
  
  ## Action Errors
- 
- When you execute an action with **RequestAction**, the protocol will report back any cases where the actions failed. These are equivalent to the red text error messages that appear on the left side of the screen while playing. There are two different places where these may be reported in the protocol.
- 
--All actions are validated before they are executed. If an action fails initial validation, it will be reported back immediately in **ResponseAction**. For example, if you try to build a structure but didn’t have enough resources.
-+All actions are validated before they are executed. If an action fails initial validation, it will be reported back immediately in **ResponseAction**. For example, if you try to build a structure but didn't have enough resources.
- 
- Actions can also fail in the process of being executed. For example, if a unit was trying to build a structure at a distant location, but when it arrived there was an enemy unit in the way. These types of late errors are reported back in **ResponseObservation**.
  
 @@ -201,9 +201,9 @@ You can retrieve a listing of what maps are locally cached by using **RequestAva
  
@@ -226,43 +187,25 @@ index 36c4a37..91a9730 100644
  
  The solution to this is to launch the newest version of the game, and request it to download the required old data for you. This is exposed in the API with this field: RequestReplayInfo::download_data
  
-diff --git a/s2clientprotocol/common.proto b/s2clientprotocol/common.proto
-index 081f306..5f4e68c 100644
---- a/s2clientprotocol/common.proto
-+++ b/s2clientprotocol/common.proto
-@@ -1,5 +1,5 @@
- 
--syntax = "proto2";
-+syntax = "proto3";
- 
- package SC2APIProtocol;
- 
 diff --git a/s2clientprotocol/data.proto b/s2clientprotocol/data.proto
-index 1ac5e56..c83a7a6 100644
 --- a/s2clientprotocol/data.proto
 +++ b/s2clientprotocol/data.proto
-@@ -1,5 +1,5 @@
+@@ -5,10 +5,10 @@ package SC2APIProtocol;
  
--syntax = "proto2";
-+syntax = "proto3";
+ import "s2clientprotocol/common.proto";
  
- package SC2APIProtocol;
- 
-@@ -8,7 +8,7 @@ import "s2clientprotocol/common.proto";
- // May not relevant: queueable (everything is queueable).
- // May not be important: AbilSetId - marine stim, marauder stim.
- // Stuff omitted: transient.
+-// May not relevant: queueable (everything is queueable).
+-// May not be important: AbilSetId - marine stim, marauder stim.
+-// Stuff omitted: transient.
 -// Stuff that may be important: cost, range, Alignment, targetfilters.
-+// Stuff that may be important: cost, range, Alignment, target filters.
++// May not be relevant: queueable (everything is queueable).
++// May not be important: AbilSetId - Marine/Marauder Stimpack.
++// Omitted items: transient.
++// Items that may be important: cost, range, Alignment, target filters.
  message AbilityData {
    optional uint32 ability_id = 1;                                 // Stable ID.
    optional string link_name = 2;                                  // Catalog name of the ability.
-@@ -19,11 +19,12 @@ message AbilityData {
-   optional uint32 remaps_to_ability_id = 7;                       // This ability id may be represented by the given more generic id.
- 
-   enum Target {
-+    INVALID_Target = 0;
-     None = 1;                                                     // Does not require a target.
+@@ -23,7 +23,7 @@ message AbilityData {
      Point = 2;                                                    // Requires a target position.
      Unit = 3;                                                     // Requires a unit to target. Given by position using feature layers.
      PointOrUnit = 4;                                              // Requires either a target point or target unit.
@@ -271,23 +214,7 @@ index 1ac5e56..c83a7a6 100644
    }
  
    optional bool available = 8;                                    // If true, the ability may be used by this set of mods/map.
-@@ -37,6 +38,7 @@ message AbilityData {
- }
- 
- enum Attribute {
-+  INVALID_Attribute = 0;
-   Light = 1;
-   Armored = 2;
-   Biological = 3;
-@@ -57,6 +59,7 @@ message DamageBonus {
- 
- message Weapon {
-   enum TargetType {
-+    INVALID_TargetType = 0;
-     Ground = 1;
-     Air = 2;
-     Any = 3;
-@@ -64,7 +67,7 @@ message Weapon {
+@@ -64,7 +64,7 @@ message Weapon {
    optional TargetType type = 1;
    optional float damage = 2;
    repeated DamageBonus damage_bonus = 3;
@@ -297,103 +224,87 @@ index 1ac5e56..c83a7a6 100644
    optional float speed = 6;                 // Time between attacks.
  }
 diff --git a/s2clientprotocol/debug.proto b/s2clientprotocol/debug.proto
-index 60ae90a..42cf722 100644
 --- a/s2clientprotocol/debug.proto
 +++ b/s2clientprotocol/debug.proto
-@@ -1,5 +1,5 @@
- 
--syntax = "proto2";
-+syntax = "proto3";
- 
- package SC2APIProtocol;
- 
-@@ -67,6 +67,7 @@ message DebugSphere {
+@@ -67,18 +67,32 @@ message DebugSphere {
  }
  
  enum DebugGameState {
-+  INVALID_DebugGameState = 0;
-   show_map = 1;
-   control_enemy = 2;
-   food = 3;
-@@ -94,6 +95,7 @@ message DebugKillUnit {
++  option allow_alias = true;
++
++  ShowMap = 1;
+-  show_map = 1;
++  show_map = 1 [deprecated = true];       // Temporary. Will be deleted at some point in the future.
++  ControlEnemy = 2;
+-  control_enemy = 2;
++  control_enemy = 2 [deprecated = true];  // Temporary. Will be deleted at some point in the future.
++  Food = 3;
+-  food = 3;
++  food = 3 [deprecated = true];           // Temporary. Will be deleted at some point in the future.
++  Free = 4;
+-  free = 4;
++  free = 4 [deprecated = true];           // Temporary. Will be deleted at some point in the future.
++  AllResources = 5;
+-  all_resources = 5;
++  all_resources = 5 [deprecated = true];  // Temporary. Will be deleted at some point in the future.
++  God = 6;
+-  god = 6;
++  god = 6 [deprecated = true];            // Temporary. Will be deleted at some point in the future.
++  Minerals = 7;
+-  minerals = 7;
++  minerals = 7 [deprecated = true];       // Temporary. Will be deleted at some point in the future.
++  Gas = 8;
+-  gas = 8;
++  gas = 8 [deprecated = true];            // Temporary. Will be deleted at some point in the future.
++  Cooldown = 9;
+-  cooldown = 9;
++  cooldown = 9 [deprecated = true];       // Temporary. Will be deleted at some point in the future.
++  TechTree = 10;
+-  tech_tree = 10;
++  tech_tree = 10 [deprecated = true];     // Temporary. Will be deleted at some point in the future.
++  Upgrade = 11;
+-  upgrade = 11;
++  upgrade = 11 [deprecated = true];       // Temporary. Will be deleted at some point in the future.
++  FastBuild = 12;
+-  fast_build = 12;
++  fast_build = 12 [deprecated = true];    // Temporary. Will be deleted at some point in the future.
+ }
+ 
+ message DebugCreateUnit {
+@@ -94,9 +108,14 @@ message DebugKillUnit {
  
  message DebugTestProcess {
    enum Test {
-+    INVALID_DebugTestProcess_Test = 0;
-     hang = 1;
-     crash = 2;
-     exit = 3;
-@@ -108,6 +110,7 @@ message DebugSetScore {
- 
- message DebugEndGame {
-   enum EndResult {
-+    INVALID_EndResult = 0;
-     Surrender = 1;                  // Default if nothing is set. The current player admits defeat.
-     DeclareVictory = 2;
++    option allow_alias = true;
++
++    Hang = 1;
+-    hang = 1;
++    hang = 1 [deprecated = true];          // Temporary. Will be deleted at some point in the future.
++    Crash = 2;
+-    crash = 2;
++    crash = 2 [deprecated = true];         // Temporary. Will be deleted at some point in the future.
++    Exit = 3;
+-    exit = 3;
++    exit = 3 [deprecated = true];          // Temporary. Will be deleted at some point in the future.
    }
-@@ -116,6 +119,7 @@ message DebugEndGame {
- 
- message DebugSetUnitValue {
-   enum UnitValue {
-+    INVALID_UnitValue = 0;
-     Energy = 1;
-     Life = 2;
-     Shields = 3;
+   optional Test test = 1;
+   optional int32 delay_ms = 2;
 diff --git a/s2clientprotocol/error.proto b/s2clientprotocol/error.proto
-index fe223e9..8fc3980 100644
 --- a/s2clientprotocol/error.proto
 +++ b/s2clientprotocol/error.proto
-@@ -1,9 +1,10 @@
- 
--syntax = "proto2";
-+syntax = "proto3";
- 
- package SC2APIProtocol;
- 
- enum ActionResult {
-+  INVALID_ActionResult = 0;
-   Success = 1;
-   NotSupported = 2;
+@@ -10,7 +10,7 @@ enum ActionResult {
    Error = 3;
-diff --git a/s2clientprotocol/query.proto b/s2clientprotocol/query.proto
-index c4270f6..a93f5d6 100644
---- a/s2clientprotocol/query.proto
-+++ b/s2clientprotocol/query.proto
-@@ -1,5 +1,5 @@
- 
--syntax = "proto2";
-+syntax = "proto3";
- 
- package SC2APIProtocol;
- 
+   CantQueueThatOrder = 4;
+   Retry = 5;
+-  Cooldown = 6;
++  OnCooldown = 6;
+   QueueIsFull = 7;
+   RallyQueueIsFull = 8;
+   NotEnoughMinerals = 9;
 diff --git a/s2clientprotocol/raw.proto b/s2clientprotocol/raw.proto
-index 1a08e6a..b210933 100644
 --- a/s2clientprotocol/raw.proto
 +++ b/s2clientprotocol/raw.proto
-@@ -1,5 +1,5 @@
- 
--syntax = "proto2";
-+syntax = "proto3";
- 
- package SC2APIProtocol;
- 
-@@ -59,6 +59,7 @@ message UnitOrder {
- }
- 
- enum DisplayType {
-+  INVALID_DisplayType = 0;
-   Visible = 1;                            // Fully visible
-   Snapshot = 2;                           // Dimmed version of unit left behind after entering fog of war
-   Hidden = 3;                             // Fully hidden
-@@ -66,6 +67,7 @@ enum DisplayType {
- }
- 
- enum Alliance {
-+  INVALID_Alliance = 0;
-   Self = 1;
-   Ally = 2;
-   Neutral = 3;
-@@ -116,7 +118,7 @@ message Unit {
+@@ -116,7 +116,7 @@ message Unit {
    optional float radar_range = 32;
  
    optional bool is_selected = 11;
@@ -402,7 +313,7 @@ index 1a08e6a..b210933 100644
    optional bool is_blip = 13;               // Detected by sensor tower
    optional bool is_powered = 35;
    optional bool is_active = 39;             // Building is training/researching (ie animated).
-@@ -147,8 +149,8 @@ message Unit {
+@@ -147,8 +147,8 @@ message Unit {
    optional int32 ideal_harvesters = 29;
    optional float weapon_cooldown = 30;
    optional uint64 engaged_target_tag = 34;
@@ -413,26 +324,18 @@ index 1a08e6a..b210933 100644
    repeated RallyTarget rally_targets = 45;
  }
  
-@@ -163,7 +165,7 @@ message Event {
+@@ -163,7 +163,7 @@ message Event {
  
  message Effect {
    optional uint32 effect_id = 1;
 -  repeated Point2D pos = 2;                     // Effect may impact multiple locations. (eg. Lurker attack)
-+  repeated Point2D pos = 2;                     // Effect may impact multiple locations. (e.g. Lurker attack)
++  repeated Point2D pos = 2;                     // Effect may impact multiple locations (e.g. Lurker attack).
    optional Alliance alliance = 3;
    optional int32 owner = 4;
    optional float radius = 5;
 diff --git a/s2clientprotocol/sc2api.proto b/s2clientprotocol/sc2api.proto
-index d82db04..488e7e3 100644
 --- a/s2clientprotocol/sc2api.proto
 +++ b/s2clientprotocol/sc2api.proto
-@@ -1,5 +1,5 @@
- 
--syntax = "proto2";
-+syntax = "proto3";
- 
- package SC2APIProtocol;
- 
 @@ -24,7 +24,7 @@ import "s2clientprotocol/ui.proto";
  //    2) Designate a host, and Request.create_game with a multiplayer map.
  //    3) Call Request.join on BOTH clients. Join will block until both clients connect.
@@ -442,159 +345,104 @@ index d82db04..488e7e3 100644
  //    4) Call Request.leave at any point or when the game ends. Observations will not be valid after this.
  //
  // States:
-@@ -155,6 +155,7 @@ message Response {
+@@ -155,13 +155,22 @@ message Response {
  }
  
  enum Status {
-+  INVALID_Game_Status = 0;
-   launched = 1;                                 // Game has been launch and is not yet doing anything.
-   init_game = 2;                                // Create game has been called, and the host is awaiting players.
-   in_game = 3;                                  // In a single or multiplayer game.
-@@ -191,6 +192,7 @@ message LocalMap {
- 
- message ResponseCreateGame {
-   enum Error {
-+    INVALID_ResponseCreateGame_Error = 0;
-     MissingMap = 1;
-     InvalidMapPath = 2;
-     InvalidMapData = 3;
-@@ -231,6 +233,7 @@ message ResponseJoinGame {
-   optional uint32 player_id = 1;
- 
-   enum Error {
-+    INVALID_ResponseJoinGame_Error = 0;
-     MissingParticipation = 1;
-     InvalidObservedPlayerId = 2;
-     MissingOptions = 3;
-@@ -258,6 +261,7 @@ message RequestRestartGame {
- // The defaultRestartGameLoops is specified to be (1<<18) by default
- message ResponseRestartGame {
-   enum Error {
-+    INVALID_ResponseRestartGame_Error = 0;
-     LaunchError = 1;
-   }
-   optional Error error = 1;
-@@ -282,6 +286,7 @@ message RequestStartReplay {
- 
- message ResponseStartReplay {
-   enum Error {
-+     INVALID_ResponseStartReplay_Error = 0;
-     MissingReplay = 1;
-     InvalidReplayPath = 2;
-     InvalidReplayData = 3;
-@@ -301,6 +306,7 @@ message RequestMapCommand {
- 
- message ResponseMapCommand {
-   enum Error {
-+    INVALID_ResponseMapCommand_Error = 0;
-     NoTriggerError = 1;
-   }
-   optional Error error = 1;
-@@ -453,6 +459,7 @@ message ResponseReplayInfo {
-   optional uint32 base_build = 8;
- 
-   enum Error {
-+    INVALID_ResponseReplayInfo_Error = 0;
-     MissingReplay = 1;
-     InvalidReplayPath = 2;
-     InvalidReplayData = 3;
-@@ -484,6 +491,7 @@ message RequestSaveMap {
- 
- message ResponseSaveMap {
-   enum Error {
-+    INVALID_ResponseSaveMap_Error = 0;
-     InvalidMapData = 1;
-   }
-   optional Error error = 1;
-@@ -514,6 +522,7 @@ message ResponseDebug {
- //
- 
- enum Difficulty {
-+  INVALID_Difficulty = 0;
-   VeryEasy = 1;
-   Easy = 2;
-   Medium = 3;
-@@ -527,12 +536,14 @@ enum Difficulty {
++  option allow_alias = true;
++
++  Launched = 1;                                 // Game has been launched and is not yet doing anything.
+-  launched = 1;                                 // Game has been launch and is not yet doing anything.
++  launched = 1 [deprecated = true];             // Temporary. Will be deleted at some point in the future.
++  InitGame = 2;                                 // Create game has been called, and the host is awaiting players.
+-  init_game = 2;                                // Create game has been called, and the host is awaiting players.
++  init_game = 2 [deprecated = true];            // Temporary. Will be deleted at some point in the future.
++  InGame = 3;                                   // In a single or multiplayer game.
+-  in_game = 3;                                  // In a single or multiplayer game.
++  in_game = 3 [deprecated = true];              // Temporary. Will be deleted at some point in the future.
++  InReplay = 4;                                 // In a replay.
+-  in_replay = 4;                                // In a replay.
++  in_replay = 4 [deprecated = true];            // Temporary. Will be deleted at some point in the future.
++  Ended = 5;                                    // Game has ended, can still request game info, but ready for a new game.
+-  ended = 5;                                    // Game has ended, can still request game info, but ready for a new game.
++  ended = 5 [deprecated = true];                // Temporary. Will be deleted at some point in the future.
++  Quit = 6;                                     // Application is shutting down.
+-  quit = 6;                                     // Application is shutting down.
++  quit = 6 [deprecated = true];                 // Temporary. Will be deleted at some point in the future.
++  Unknown = 99;                                 // Should not happen, but indicates an error if it occurs.
+-  unknown = 99;                                 // Should not happen, but indicates an error if it occurs.
++  unknown = 99 [deprecated = true];             // Temporary. Will be deleted at some point in the future.
  }
  
- enum PlayerType {
-+  INVALID_PlayerType = 0;
-   Participant = 1;
-   Computer = 2;
-   Observer = 3;
+ //-----------------------------------------------------------------------------
+@@ -216,14 +225,14 @@ message RequestJoinGame {
+   optional InterfaceOptions options = 3;    // This is limited to what is specified in RequestCreateGame, but you can request less information if you want.
+   optional PortSet server_ports = 4;        // Do not set in the single-player case. This is the port a server will use.
+   repeated PortSet client_ports = 5;        // Do not set in the single-player case. These are the ports clients will use to initialize communication.
+-                                            // Currently only a singe client is supported.
++                                            // Currently only a single client is supported.
+   optional int32 shared_port = 6;  // deprecated
+   optional string player_name = 7;          // Use this to set the player's name to something other than autogenerated name.
+   optional string host_ip = 8;     // Both game creator and joiner should provide the ip address of the game creator in order to play remotely. Defaults to localhost.
  }
  
- enum AIBuild {
-+  INVALID_AIBuild = 0;
-   RandomBuild = 1;
-   Rush = 2;
-   Timing = 3;
-@@ -638,6 +649,7 @@ message Action {
- 
- message ActionChat {
-   enum Channel {
-+    INVALID_Channel = 0;
-     Broadcast = 1;
-     Team = 2;
-   }
-@@ -681,6 +693,7 @@ message ActionObserverCameraFollowUnits {
+ message PortSet {
+-  optional int32 game_port = 1;             // Game right now needs two internal ports to establish a multiplay game on the local host.
++  optional int32 game_port = 1;             // Game currently needs two internal ports to establish a multiplayer game on the local host.
+   optional int32 base_port = 2;
  }
  
- enum Alert {
-+  INVALID_Alert = 0;
-   AlertError = 3;
-   AddOnComplete = 4;
-   BuildingComplete = 5;
-@@ -706,6 +719,7 @@ enum Alert {
- }
- 
- enum Result {
-+  INVALID_Game_Result = 0;
-   Victory = 1;
-   Defeat = 2;
-   Tie = 3;
 diff --git a/s2clientprotocol/score.proto b/s2clientprotocol/score.proto
-index 71a0ae9..78d9492 100644
 --- a/s2clientprotocol/score.proto
 +++ b/s2clientprotocol/score.proto
-@@ -1,21 +1,22 @@
- 
--syntax = "proto2";
-+syntax = "proto3";
- 
- package SC2APIProtocol;
+@@ -5,8 +5,8 @@ package SC2APIProtocol;
  
  message Score {
    enum ScoreType {
 -    Curriculum = 1;                // map generated score (from curriculum maps with special scoring)
 -    Melee = 2;                     // summation of in-progress and current units/buildings value + minerals + vespene
-+    INVALID_ScoreType = 0;
 +    Curriculum = 1;                // Map generated score (from curriculum maps with special scoring).
 +    Melee = 2;                     // Summation of in-progress and current units/buildings value + minerals + vespene.
    }
  
    optional ScoreType score_type = 6;
--  optional int32 score = 7;                 // Note: check score_type to know whether this is a melee score or curriculum score
-+  optional int32 score = 7;                 // Note: Check score_type to know whether this is a melee score or curriculum score.
-   optional ScoreDetails score_details = 8;
+@@ -15,11 +15,11 @@ message Score {
  }
  
  message CategoryScoreDetails {
 -  optional float none = 1; // Used when no other category is configured in game data
-+  optional float none = 1; // Used when no other category is configured in game data.
-   optional float army = 2;
-   optional float economy = 3;
-   optional float technology = 4;
-@@ -59,7 +60,7 @@ message ScoreDetails {
+-  optional float army = 2;
+-  optional float economy = 3;
+-  optional float technology = 4;
+-  optional float upgrade = 5;
++  optional float none = 1;        // Used when no other category is configured in game data.
++  optional float army = 2;        // Includes all military units but not workers.
++  optional float economy = 3;     // Townhalls, supply structures, vespene buildings and workers.
++  optional float technology = 4;  // Any structure that produces units or upgrades (e.g. Barracks and Engineering Bays).
++  optional float upgrade = 5;     // This category is upgrades such as Warp Gate or weapons upgrades.
+ }
+ 
+ message VitalScoreDetails {
+@@ -29,7 +29,7 @@ message VitalScoreDetails {
+ }
+ 
+ message ScoreDetails {
+-  // Sum of time any available structure able to produce a unit is not. The time stacks, as in, three idle barracks will increase idle_production_time three times quicker than just one.
++  // Sum of time that any unit-producing structure is idle. The time stacks; for example, three idle barracks will increase idle_production_time three times faster than just one.  optional float idle_production_time = 1;
+   optional float idle_production_time = 1;
+   // Sum of time any worker is not mining. Note a worker building is not idle and three idle workers will increase this value three times quicker than just one.
+   optional float idle_worker_time = 2;
+@@ -59,19 +59,12 @@ message ScoreDetails {
    // Sum of spent vespene at the moment it is spent. For example, this number is incremented by 50 when a reaper is queued but decremented by 50 if it is canceled.
    optional float spent_vespene = 12;
  
 -  // The following entries contains floating point values for the following catgories:
-+  // The following entries contains floating point values for the following categories:
-   //   none - There is no category defined in game data.
-   //   army - This category includes all military units but not workers.
-   //   economy - This category contains town halls, supply structures, vespene buildings and workers.
-@@ -69,9 +70,9 @@ message ScoreDetails {
+-  //   none - There is no category defined in game data.
+-  //   army - This category includes all military units but not workers.
+-  //   economy - This category contains town halls, supply structures, vespene buildings and workers.
+-  //   technology - This category is any structure that produces units or upgrades, Barracks and Engineering Bays both fall in this category, for example.
+-  //   upgrade - This category is upgrades such as warp gate or weapons upgrades.
+-
    // Sum of food, or supply, utilized in the categories above.
    optional CategoryScoreDetails food_used = 13;
  
@@ -606,8 +454,15 @@ index 71a0ae9..78d9492 100644
    optional CategoryScoreDetails killed_vespene = 15;
  
    //  Sum of lost minerals for the player in each category.
-@@ -84,21 +85,21 @@ message ScoreDetails {
-   // Sum of the lost vespene via destroying the players own units/buildings.
+@@ -79,26 +72,26 @@ message ScoreDetails {
+   // Sum of lost vespene for the player in each category.
+   optional CategoryScoreDetails lost_vespene = 17;
+ 
+-  // Sum of the lost minerals via destroying the players own units/buildings.
++  // Sum of the lost minerals via destroying the player's own units/buildings.
+   optional CategoryScoreDetails friendly_fire_minerals = 18;
+-  // Sum of the lost vespene via destroying the players own units/buildings.
++  // Sum of the lost vespene via destroying the player's own units/buildings.
    optional CategoryScoreDetails friendly_fire_vespene = 19;
  
 -  // Sum of used minerals for the player in each category for each existing unit or upgrade. Therefore if a unit died worth 50 mierals this number will be decremented by 50.
@@ -628,21 +483,13 @@ index 71a0ae9..78d9492 100644
    // Sum of damage taken by the player for each category.
    optional VitalScoreDetails total_damage_taken = 25;
 -  // Sum of health healed by the player. Note that technology can be healed (by queens) or repaired (by scvs).
-+  // Sum of health healed by the player. Note that technology can be healed (by queens) or repaired (by SCVs).
++  // Sum of health healed by the player. Note that technology can be healed (by Queens) or repaired (by SCVs).
    optional VitalScoreDetails total_healed = 26;
  
    // Recent raw APM.
 diff --git a/s2clientprotocol/spatial.proto b/s2clientprotocol/spatial.proto
-index 1e8b736..8454227 100644
 --- a/s2clientprotocol/spatial.proto
 +++ b/s2clientprotocol/spatial.proto
-@@ -1,5 +1,5 @@
- 
--syntax = "proto2";
-+syntax = "proto3";
- 
- package SC2APIProtocol;
- 
 @@ -31,7 +31,7 @@ message FeatureLayers {
    optional ImageData player_relative = 11;          // uint8. See "Alliance" enum in raw.proto. Range: [1, 4] 
    optional ImageData unit_density_aa = 14;          // uint8. Density of units overlapping a pixel, anti-aliased. [0.0, 16.0f] encoded into [0, 255].
@@ -652,61 +499,7 @@ index 1e8b736..8454227 100644
    optional ImageData hallucinations = 21;           // 1-bit. Whether the unit here is a hallucination.
    optional ImageData cloaked = 22;                  // 1-bit. Whether the unit here is cloaked. Hidden units will show up too, but with less details in other layers.
    optional ImageData blip = 23;                     // 1-bit. Whether the unit here is a blip.
-@@ -101,6 +101,7 @@ message ActionSpatialCameraMove {
- message ActionSpatialUnitSelectionPoint {
-   optional PointI selection_screen_coord = 1;
-   enum Type {
-+    INVALID_ActionSpatialUnitSelectionPoint_Type = 0;
-     Select = 1;         // Equivalent to normal click. Changes selection to unit.
-     Toggle = 2;         // Equivalent to shift+click. Toggle selection of unit.
-     AllType = 3;        // Equivalent to control+click. Selects all units of a given type.
-diff --git a/s2clientprotocol/ui.proto b/s2clientprotocol/ui.proto
-index d760be5..4ec45bd 100644
---- a/s2clientprotocol/ui.proto
-+++ b/s2clientprotocol/ui.proto
-@@ -1,5 +1,5 @@
- 
--syntax = "proto2";
-+syntax = "proto3";
- 
- package SC2APIProtocol;
- 
-@@ -90,6 +90,7 @@ message ActionUI {
- 
- message ActionControlGroup {
-   enum ControlGroupAction {
-+    INVALID_ControlGroupAction = 0;
-     Recall = 1;             // Equivalent to number hotkey. Replaces current selection with control group.
-     Set = 2;                // Equivalent to Control + number hotkey. Sets control group to current selection.
-     Append = 3;             // Equivalent to Shift + number hotkey. Adds current selection into control group.
-@@ -113,6 +114,7 @@ message ActionSelectLarva {
- 
- message ActionSelectIdleWorker {
-   enum Type {
-+    INVALID_ActionSelectIdleWorker_Type = 0;
-     Set = 1;        // Equivalent to click with no modifiers. Replaces selection with single idle worker.
-     Add = 2;        // Equivalent to shift+click. Adds single idle worker to current selection.
-     All = 3;        // Equivalent to control+click. Selects all idle workers.
-@@ -123,6 +125,7 @@ message ActionSelectIdleWorker {
- 
- message ActionMultiPanel {
-   enum Type {
-+    INVALID_ActionMultiPanel_Type = 0;
-     SingleSelect = 1;         // Click on icon
-     DeselectUnit = 2;         // Shift Click on icon
-     SelectAllOfType = 3;      // Control Click on icon.
-diff --git a/samples/replay-api/README.md b/samples/replay-api/README.md
-index 7afc199..92af70f 100644
---- a/samples/replay-api/README.md
-+++ b/samples/replay-api/README.md
-@@ -30,4 +30,4 @@ Once the script is run successfully, any matching replay packs will be downloade
- 
- To access StarCraft II replay packs, you must agree to the [AI and Machine Learning License](https://blzdistsc2-a.akamaihd.net/AI_AND_MACHINE_LEARNING_LICENSE.html)  
- The files are password protected with the password 'iagreetotheeula'.  
--**By typing in the password ‘iagreetotheeula’ you agree to be bound by the terms of the [AI and Machine Learning License](https://blzdistsc2-a.akamaihd.net/AI_AND_MACHINE_LEARNING_LICENSE.html)**
-+**By typing in the password 'iagreetotheeula' you agree to be bound by the terms of the [AI and Machine Learning License](https://blzdistsc2-a.akamaihd.net/AI_AND_MACHINE_LEARNING_LICENSE.html)**
 diff --git a/samples/replay-api/download_replays.py b/samples/replay-api/download_replays.py
-index 9ac31dd..00f11b2 100755
 --- a/samples/replay-api/download_replays.py
 +++ b/samples/replay-api/download_replays.py
 @@ -65,7 +65,7 @@ class BnetAPI(object):
@@ -718,8 +511,16 @@ index 9ac31dd..00f11b2 100755
          params = params or {}
          params['namespace'] = API_NAMESPACE,
          headers = {'Authorization': 'Bearer ' + self._token}
+@@ -87,7 +87,7 @@ class BnetAPI(object):
+         return self.get(self.url('/data/sc2/archive_url/base_url'))['base_url']
+ 
+     def search_by_client_version(self, client_version):
+-        """Search for replay archives by version."""
++        """Search for replay archives by a specific version."""
+         meta_urls = []
+         for page in itertools.count(1):
+             params = {
 diff --git a/setup.py b/setup.py
-index 6ede9af..7e720e6 100755
 --- a/setup.py
 +++ b/setup.py
 @@ -34,7 +34,7 @@ def proto_files(root):
