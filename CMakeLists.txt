@@ -53,6 +53,7 @@ set(CMAKE_DEBUG_POSTFIX ${LIBRARY_DEBUG_POSTFIX})
 list(APPEND CMAKE_MODULE_PATH
     "${PROJECT_SOURCE_DIR}/thirdparty/cmake"
     "${PROJECT_SOURCE_DIR}/thirdparty/civetweb"
+    "${PROJECT_SOURCE_DIR}/thirdparty/sc2client-proto"
     "${PROJECT_SOURCE_DIR}/cmake/assets")
 
 # Build with c++20 support.
@@ -85,7 +86,7 @@ endif ()
 # External subproject dependencies.
 include(civetweb)
 include(protobuf)
-include(sc2protocol)
+include(sc2client-proto)
 if (BUILD_SC2_RENDERER)
     include(SDL)
 endif ()
