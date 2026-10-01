@@ -5,7 +5,7 @@
 #include <string>
 
 #include "sc2api/sc2_api.h"
-#include "sc2lib/sc2_lib.h"
+#include "sc2lib/sc2_utils.h"
 #include "test_framework.h"
 
 namespace sc2 {

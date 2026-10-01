@@ -4,7 +4,7 @@
 
 #include "feature_layers_shared.h"
 #include "sc2api/sc2_api.h"
-#include "sc2lib/sc2_lib.h"
+#include "sc2lib/sc2_utils.h"
 #include "test_framework.h"
 #include "test_movement_combat.h"
 

@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "sc2api/sc2_api.h"
-#include "sc2lib/sc2_lib.h"
+#include "sc2lib/sc2_utils.h"
 #include "sc2utils/sc2_manage_process.h"
 
 class FooBot : public sc2::Agent {
