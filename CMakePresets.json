@@ -7,46 +7,39 @@
   },
   "configurePresets": [
     {
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "cacheVariables": {
-        "CMAKE_CXX_STANDARD": "20"
-      },
       "name": "base-Ninja",
-      "description": "Base Ninja inheritance which all other build are based on",
-      "generator": "Ninja",
+      "description": "Base Ninja inheritance which all other builds are based on",
       "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
       "installDir": "${sourceDir}/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_CXX_STANDARD": "20",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      },
       "warnings": {
         "dev": false
       }
     },
     {
-      "architecture": {
-        "value": "x64",
-        "strategy": "external"
-      },
-      "cmakeExecutable": "C:/SC2AI/_Resources/_toolchains/CMake/cmake-4.4.3-windows-x86_64/bin/cmake.exe",
+      "name": "base-Windows-Ninja",
+      "description": "Base Window's inheritance which all other Windows builds are based on",
+      "inherits": "base-Ninja",
+      "hidden": true,
+      "cmakeExecutable": "\"C:\\Program Files\\CMake\\bin\\cmake.exe\"",
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
-      },
-      "name": "base-Windows-Ninja",
-      "inherits": "base-Ninja",
-      "description": "Base Window's inheritance which all other Windows builds are based on",
-      "hidden": true,
-      "toolset": {
-        "value": "host=x64",
-        "strategy": "external"
       }
     },
     {
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-      },
       "name": "MinGW-RelWithDebInfo-x64",
       "displayName": "MinGW-RelWithDebInfo-x64",
       "inherits": "base-Windows-Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      },
       "vendor": {
         "jetbrains.com/clion": {
           "toolchain": "MinGW-max"
@@ -54,12 +47,12 @@
       }
     },
     {
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
-      },
       "name": "MSVC-RelWithDebInfo-x64",
       "displayName": "MSVC-RelWithDebInfo-x64",
       "inherits": "base-Windows-Ninja",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      },
       "vendor": {
         "jetbrains.com/clion": {
           "toolchain": "MSVC"
@@ -67,20 +60,36 @@
       }
     },
     {
+      "name": "wsl-base",
+      "displayName": "wsl-base",
+      "inherits": "base-Ninja",
+      "hidden": true,
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "BUILD_SC2_RENDERER": "OFF"
       },
-      "name": "x64-Release",
-      "displayName": "Release",
-      "inherits": "base-Windows-Ninja"
+      "vendor": {
+        "jetbrains.com/clion": {
+          "toolchain": "WSL"
+        }
+      }
     },
     {
+      "name": "wsl-profiler",
+      "displayName": "WSL Profiler (RelWithDebInfo)",
+      "inherits": "wsl-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_C_FLAGS": "-fno-omit-frame-pointer",
+        "CMAKE_CXX_FLAGS": "-fno-omit-frame-pointer"
+      }
+    },
+    {
+      "name": "wsl-debug",
+      "displayName": "WSL Debug",
+      "inherits": "wsl-base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
-      },
-      "name": "x64-Debug",
-      "displayName": "Debug",
-      "inherits": "base-Windows-Ninja"
+      }
     }
   ]
 }
