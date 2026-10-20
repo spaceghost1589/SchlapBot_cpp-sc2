@@ -1,5 +1,6 @@
 #include "sc2_proto_to_pods.h"
 
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 
@@ -478,6 +479,11 @@ static void ConvertSpatialAction(const SC2APIProtocol::ActionSpatial& action_pro
 }
 
 void ConvertFeatureLayerActions(const ResponseObservationPtr& response_observation_ptr, SpatialActions& actions) {
+    // Prevents repeated dynamic vector resizing in the following loop.
+    actions.select_points.reserve(
+        std::ranges::count_if(response_observation_ptr->actions(),
+                              [&](const SC2APIProtocol::Action& x) -> bool { return x.has_action_feature_layer(); }));
+
     for (int i = 0; i < response_observation_ptr->actions_size(); ++i) {
         const SC2APIProtocol::Action& proto_action = response_observation_ptr->actions(i);
         if (!proto_action.has_action_feature_layer()) {
